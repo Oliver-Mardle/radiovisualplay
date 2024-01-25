@@ -178,6 +178,7 @@ function Bottom({ params }) {
 
         const r = await fetch(`${urls[env]}/${sid}/${region}`);
         
+        /*
         function reqListener() {
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(this.responseText,"text/xml");
@@ -197,6 +198,7 @@ function Bottom({ params }) {
         req.addEventListener("load", reqListener);
         req.open("GET", "https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page&mixins=summary");
         req.send();
+        */
 
         if (r.ok) {
           const data = await r.json()
