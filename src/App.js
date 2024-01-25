@@ -184,7 +184,11 @@ function Bottom({ params }) {
           const titles = xmlDoc.getElementsByTagName('title')
           for (let i = 1; i < titles.length; i++) {
             console.log(xmlDoc.getElementsByTagName('title')[i].childNodes[0].nodeValue);
-            console.log(xmlDoc.getElementsByTagName('summary')[i].childNodes[0].nodeValue);
+            try {
+              console.log(xmlDoc.getElementsByTagName('summary')[i].childNodes[0].nodeValue);
+            } catch (error) {
+              console.log("No Summary!");
+            }
             console.log();
           }
         }
