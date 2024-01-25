@@ -182,7 +182,7 @@ function Bottom({ params }) {
           console.log(this.responseText);
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(this.responseText,"text/xml");
-          console.log(xmlDoc.getElementsByTagName('title'));
+          console.log(xmlDoc.getElementsByTagName('title')[0].childNodes[0].nodeValue);
         }
         
         const req = new XMLHttpRequest();
