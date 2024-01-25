@@ -180,6 +180,9 @@ function Bottom({ params }) {
         
         function reqListener() {
           console.log(this.responseText);
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(this.responseText,"text/xml");
+          console.log(xmlDoc.getElementsByTagName('title'));
         }
         
         const req = new XMLHttpRequest();
