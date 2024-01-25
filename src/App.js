@@ -178,7 +178,6 @@ function Bottom({ params }) {
 
         const r = await fetch(`${urls[env]}/${sid}/${region}`);
         
-        /*
         function reqListener() {
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(this.responseText,"text/xml");
@@ -186,7 +185,7 @@ function Bottom({ params }) {
           for (let i = 1; i < titles.length; i++) {
             console.log(xmlDoc.getElementsByTagName('title')[i].childNodes[0].nodeValue);
             try {
-              console.log(xmlDoc.getElementsByTagName('summary')[i].childNodes[0].nodeValue);
+              console.log(xmlDoc.getElementsByTagName('description')[i].childNodes[0].nodeValue);
             } catch (error) {
               console.log("No Summary!");
             }
@@ -198,7 +197,6 @@ function Bottom({ params }) {
         req.addEventListener("load", reqListener);
         req.open("GET", "https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page&mixins=summary");
         req.send();
-        */
 
         if (r.ok) {
           const data = await r.json()
