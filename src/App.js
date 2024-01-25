@@ -184,12 +184,14 @@ function Bottom({ params }) {
           const titles = xmlDoc.getElementsByTagName('title')
           for (let i = 1; i < titles.length; i++) {
             console.log(xmlDoc.getElementsByTagName('title')[i].childNodes[0].nodeValue);
+            console.log(xmlDoc.getElementsByTagName('summary')[i].childNodes[0].nodeValue);
+            console.log();
           }
         }
         
         const req = new XMLHttpRequest();
         req.addEventListener("load", reqListener);
-        req.open("GET", "https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page");
+        req.open("GET", "https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page&mixins=summary");
         req.send();
 
         if (r.ok) {
