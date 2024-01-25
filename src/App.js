@@ -185,7 +185,6 @@ function Bottom({ params }) {
           for (let i = 1; i < titles.length; i++) {
             console.log(xmlDoc.getElementsByTagName('title')[i].childNodes[0].nodeValue);
           }
-          setNow(titles[0]);
         }
         
         const req = new XMLHttpRequest();
@@ -196,7 +195,7 @@ function Bottom({ params }) {
         if (r.ok) {
           const data = await r.json()
           setNext(chooseNext(data.next, minDuration));
-          //setNow(data.now);
+          setNow(data.now);
         }
       })();
     }, 5000);
