@@ -179,10 +179,11 @@ function Bottom({ params }) {
         const r = await fetch(`${urls[env]}/${sid}/${region}`);
         
         function reqListener() {
-          console.log(this.responseText);
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(this.responseText,"text/xml");
-          console.log(xmlDoc.getElementsByTagName('title')[0].childNodes[0].nodeValue);
+          for (let i = 1; i < xmlDoc.length; i++) {
+            console.log(xmlDoc.getElementsByTagName('title')[i].childNodes[0].nodeValue);
+          }
         }
         
         const req = new XMLHttpRequest();
