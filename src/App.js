@@ -181,7 +181,8 @@ function Bottom({ params }) {
         function reqListener() {
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(this.responseText,"text/xml");
-          for (let i = 1; i < xmlDoc.length; i++) {
+          const titles = xmlDoc.getElementsByTagName('title')
+          for (let i = 1; i < titles.length; i++) {
             console.log(xmlDoc.getElementsByTagName('title')[i].childNodes[0].nodeValue);
           }
         }
