@@ -1,9 +1,11 @@
 {
   "name": "radiovisualplay",
-  "homepage": "https://jimoliver.github.io/radiovisualplay",
+  "homepage": "https://Oliver-Mardle.github.io/radiovisualplay",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.10.3",
     "react": "^18.2.0",

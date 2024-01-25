@@ -11,7 +11,8 @@ const iplayerPink = '#f54996';
 
 const urls = {
   test: 'https://jfayiszondlcqngo5vavioz6bq0ibxen.lambda-url.eu-west-1.on.aws/',
-  live: 'https://ypdjc6zbc5cnvth24lk3mm45sm0qtgps.lambda-url.eu-west-1.on.aws'
+  live: 'https://ypdjc6zbc5cnvth24lk3mm45sm0qtgps.lambda-url.eu-west-1.on.aws',
+  ISAPI: 'https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page&mixins=summary,thumbnail_images'
 };
 
 function titlefor(o, rel) {
@@ -176,6 +177,12 @@ function Bottom({ params }) {
         console.log(sOfm);
 
         const r = await fetch(`${urls[env]}/${sid}/${region}`);
+        const xml = fetch('https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page');
+        console.log('XML Response');
+        console.log(xml);
+        const parser = new DOMParser();
+        const pXML = parser.parseFromString(xml, 'text/xml');
+        console.log(pXML);
         if (r.ok) {
           const data = await r.json()
           setNext(chooseNext(data.next, minDuration));
