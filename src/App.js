@@ -177,12 +177,16 @@ function Bottom({ params }) {
         console.log(sOfm);
 
         const r = await fetch(`${urls[env]}/${sid}/${region}`);
-        const xml = fetch('https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page');
-        console.log('XML Response');
-        console.log(xml);
-        const parser = new DOMParser();
-        const pXML = parser.parseFromString(xml, 'text/xml');
-        console.log(pXML);
+        
+        function reqListener() {
+          console.log(this.responseText);
+        }
+        
+        const req = new XMLHttpRequest();
+        req.addEventListener("load", reqListener);
+        req.open("GET", "https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page");
+        req.send();
+
         if (r.ok) {
           const data = await r.json()
           setNext(chooseNext(data.next, minDuration));
