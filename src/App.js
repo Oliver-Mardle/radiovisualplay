@@ -5,7 +5,7 @@ import Fade from '@mui/material/Fade';
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography';
 import BBCNews from './BBC_News_Linear_World_Service_LR_RGB.jpg'
-import sample from  './wsrv.webm';
+//import sample from  './wsrv.webm';
 import defaultImg from './default.png';
 
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -440,6 +440,14 @@ function TopLeft({ show }) {
 function TopRight({ show }) {
   return <img alt='BBC News' src={BBCNews}/>;
 }
+
+/*
+<video className='videoTag' autoPlay loop width='1920'
+          height='1080'muted>
+          <source src={sample} type='video/webm'/>
+        </video>
+*/
+
 export default function App(params) {
   return (
     <Paper>
@@ -448,10 +456,6 @@ export default function App(params) {
         display: 'grid', gridTemplateRows: '110px 150px 710px'
       }}>
         <Box>
-        <video className='videoTag' autoPlay loop width='1920'
-          height='1080'muted>
-          <source src={sample} type='video/webm'        />
-        </video>
         </Box>
         <Box sx={{ display: 'grid', width: '1700px', gridTemplateColumns: '1fr 1fr 1fr', gridTemplateRows: '1fr 1fr',  marginTop: '0px', marginLeft: '110px', marginRight: '110px'}}>
           <TopLeft show={params.tl}/>
