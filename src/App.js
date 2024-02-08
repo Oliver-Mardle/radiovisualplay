@@ -4,16 +4,10 @@ import Slide from '@mui/material/Slide';
 import Fade from '@mui/material/Fade';
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography';
-import { Temporal } from 'temporal-polyfill'
 import BBCNews from './BBC_News_Linear_World_Service_LR_RGB.jpg'
 import sample from  './wsrv.webm';
 import defaultImg from './default.png';
 
-const urls = {
-  test: 'https://jfayiszondlcqngo5vavioz6bq0ibxen.lambda-url.eu-west-1.on.aws/',
-  live: 'https://ypdjc6zbc5cnvth24lk3mm45sm0qtgps.lambda-url.eu-west-1.on.aws',
-  ISAPI: 'https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page&mixins=summary,thumbnail_images'
-};
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 let counter = 0;
@@ -27,21 +21,21 @@ function NowNextSchedule({now, next, later}) {
   let nowEpisode;
   let nowSynopsis;
   let nowStart;
-  let nowDuration;
+  //let nowDuration;
   let nowImage;
 
   let nextTitle;
   let nextEpisode;
   let nextSynopsis;
   let nextStart;
-  let nextDuration;
+  //let nextDuration;
   let nextImage;
 
   let laterTitle;
   let laterEpisode;
   let laterSynopsis;
   let laterStart;
-  let laterDuration;
+  //let laterDuration;
   let laterImage;
 
   try {
@@ -54,7 +48,7 @@ function NowNextSchedule({now, next, later}) {
     let nowDateTime = (now.start.replace("Z", "")).split("T");
     let nowDay = daysOfWeek[new Date(nowDateTime[0]).getDay()];
     nowStart = nowDay + " at " + nowDateTime[1] + " GMT";
-    nowDuration = now.duration;
+    //nowDuration = now.duration;
     if (now.thumbnail != null) {
       nowImage = now.thumbnail;
     }
@@ -73,7 +67,7 @@ function NowNextSchedule({now, next, later}) {
     let nextDateTime = (next.start.replace("Z", "")).split("T");
     let nextDay = daysOfWeek[new Date(nextDateTime[0]).getDay()];
     nextStart = nextDay + " at " + nextDateTime[1] + " GMT";
-    nextDuration = next.duration;
+    //nextDuration = next.duration;
     if (next.thumbnail != null) {
       nextImage = next.thumbnail;
     }
@@ -92,7 +86,7 @@ function NowNextSchedule({now, next, later}) {
     let laterDateTime = (later.start.replace("Z", "")).split("T");
     let laterDay = daysOfWeek[new Date(laterDateTime[0]).getDay()];
     laterStart = laterDay + " at " + laterDateTime[1] + " GMT";
-    laterDuration = later.duration;
+    //laterDuration = later.duration;
     if (later.thumbnail != null) {
       laterImage = later.thumbnail;
     }
@@ -143,7 +137,7 @@ function NowNextSchedule({now, next, later}) {
         </Box>
       </Box>
       <Box alt="" sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6 )"}}>
-        <img src={laterImage} height='200px'/>
+        <img alt="" src={laterImage} height='200px'/>
         <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
           <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{laterTitle}</Typography>
           <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterEpisode}</Typography>
@@ -295,9 +289,6 @@ function NowNext({ headline, styling }) {
 }
 
 function Bottom({ params }) {
-  const env = params.env || 'live';
-  const sid = params.sid || 'History_Channel';
-  const region = params.region || 'eu-west-2';
   const styling = params.styling || 'grownup';
 
   const [on, setOn] = useState(false);
@@ -431,6 +422,7 @@ function TopLeft({ show }) {
         } else {
           setOn(FALSE);
         }
+        console.log(on);
         let TimeDate = new Date();
         let TimeDateString = ("0" + TimeDate.getHours()).slice(-2) + ":" + ("0" + TimeDate.getMinutes()).slice(-2) + " - " + daysOfWeek[TimeDate.getDay()] + " " + TimeDate.getDate() + " " + months[TimeDate.getMonth()] + " " + TimeDate.getFullYear();
         setTimeDate(TimeDateString); 
