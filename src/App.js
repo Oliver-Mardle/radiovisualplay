@@ -8,8 +8,6 @@ import { Temporal } from 'temporal-polyfill'
 import BBCNews from './BBC_News_Linear_World_Service_LR_RGB.jpg'
 import sample from  './wsrv.webm';
 import defaultImg from './default.png';
-import { DataObject } from '@mui/icons-material';
-const iplayerPink = '#f54996';
 
 const urls = {
   test: 'https://jfayiszondlcqngo5vavioz6bq0ibxen.lambda-url.eu-west-1.on.aws/',
@@ -23,17 +21,6 @@ let counter2 = 0;
 var scheduleItemCount = 0;
 var downloadSchedule = true;
 let schedule = [];
-
-function callSchedule() {
-  let news = [];
-  const request = new XMLHttpRequest();
-  request.open("GET", "https://ws-syndication.api.bbci.co.uk/api/broadcasts?page_size=100&api-key=zRS5WtBPR6djXlWDOgkk4B0yHncsMeJ0&sid=bbc_afghan_tv&start_from=2024-01-31T00:00:00Z&end_to=2024-02-01T00:00:00Z", false);
-  request.send(null);
-
-  if (request.status === 200) {
-    console.log(request.text);
-  }
-};
 
 function NowNextSchedule({now, next, later}) {
   let nowTitle;
@@ -138,7 +125,7 @@ function NowNextSchedule({now, next, later}) {
   return (
     <Box sx={{ display: 'grid', width: '1045px', gridTemplateRows: '1fr 1fr 1fr',  marginTop: '0px', marginRight: '55px'}}>
       <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6)", marginBottom: "55px"}}>
-        <img src={nowImage} height='200px'/>
+        <img alt="" src={nowImage} height='200px'/>
         <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
           <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{nowTitle}</Typography>
           <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowEpisode}</Typography>
@@ -147,7 +134,7 @@ function NowNextSchedule({now, next, later}) {
         </Box>
       </Box>
       <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6 )", marginBottom: "55px"}}>
-        <img src={nextImage} height='200px'/>
+        <img alt="" src={nextImage} height='200px'/>
         <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
           <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{nextTitle}</Typography>
           <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextEpisode}</Typography>
@@ -155,7 +142,7 @@ function NowNextSchedule({now, next, later}) {
           <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextStart}</Typography>
         </Box>
       </Box>
-      <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6 )"}}>
+      <Box alt="" sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6 )"}}>
         <img src={laterImage} height='200px'/>
         <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
           <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{laterTitle}</Typography>
@@ -186,6 +173,7 @@ function ScheduleSection({ params }) {
         } else {
           setOn(FALSE);
         }
+        console.log(on);
         
         if (downloadSchedule === true) {
           const date = new Date();
@@ -250,10 +238,8 @@ function ScheduleSection({ params }) {
 }
 
 function NowNext({ headline, styling }) {
-  let r;
   let brand;
   let seriesEpisode;
-  let eventTitle;
   let eventTime;
   let picture;
 
@@ -277,7 +263,7 @@ function NowNext({ headline, styling }) {
       width: '600px', height: '710px',
       display: 'grid', gridTemplateRows: '1fr 1fr'
     }}>
-      <img src={picture} width='600px' height='auto'/>
+      <img alt="" src={picture} width='600px' height='auto'/>
       <Box
         sx={{
           display: 'flex',
@@ -309,10 +295,6 @@ function NowNext({ headline, styling }) {
 }
 
 function Bottom({ params }) {
-
-  const minDuration = Temporal.Duration.from(params.minDuration || 'PT2M');
-  const previewMinutes = params.next ? parseInt(params.next) : 2;
-  
   const env = params.env || 'live';
   const sid = params.sid || 'History_Channel';
   const region = params.region || 'eu-west-2';
@@ -340,8 +322,6 @@ function Bottom({ params }) {
           setOn(FALSE);
         }
         console.log(sOfm);
-
-        const r = await fetch(`${urls[env]}/${sid}/${region}`);
 
         let news = [];
         const request = new XMLHttpRequest();
@@ -469,7 +449,6 @@ function TopRight({ show }) {
   return <img alt='BBC News' src={BBCNews}/>;
 }
 export default function App(params) {
-  const demo = true;
   return (
     <Paper>
       <Box sx={{
