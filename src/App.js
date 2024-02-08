@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { Temporal } from 'temporal-polyfill'
 import BBCNews from './BBC_News_Linear_World_Service_LR_RGB.jpg'
 import sample from  './wsrv.webm';
+import defaultImg from './default.png';
 import { DataObject } from '@mui/icons-material';
 const iplayerPink = '#f54996';
 
@@ -34,7 +35,7 @@ function callSchedule() {
   }
 };
 
-function NowNextSchedule({now, next}) {
+function NowNextSchedule({now, next, later}) {
   let nowTitle;
   let nowEpisode;
   let nowSynopsis;
@@ -48,6 +49,13 @@ function NowNextSchedule({now, next}) {
   let nextStart;
   let nextDuration;
   let nextImage;
+
+  let laterTitle;
+  let laterEpisode;
+  let laterSynopsis;
+  let laterStart;
+  let laterDuration;
+  let laterImage;
 
   try {
     nowTitle = now.title;
@@ -87,9 +95,26 @@ function NowNextSchedule({now, next}) {
     console.log("No Schedule Yet");
   }
 
-  console.log(nowTitle);
-  console.log(nextTitle);
+  try {
+    laterTitle = later.title;
+    laterEpisode = later.episode;
+    laterSynopsis = later.synopsis;
+    if (laterSynopsis != null) {
+      laterSynopsis = laterSynopsis.short;
+    }
+    let laterDateTime = (later.start.replace("Z", "")).split("T");
+    let laterDay = daysOfWeek[new Date(laterDateTime[0]).getDay()];
+    laterStart = laterDay + " at " + laterDateTime[1] + " GMT";
+    laterDuration = later.duration;
+    if (later.thumbnail != null) {
+      laterImage = later.thumbnail;
+    }
 
+  } catch {
+    console.log("No Schedule Yet");
+  }
+
+  /*
   return (
     <Box sx={{ display: 'grid', width: '1700px', gridTemplateColumns: '1fr 1fr',  marginTop: '0px', marginLeft: '110px', marginRight: '110px'}}>
       <Box sx={{display: 'grid', gridTemplateRow: '1fr 1fr 1fr 1fr 1fr', height: '445px', width: '795px', color: 'white', background: "rgba(187, 24, 25, 1)", backgroundImage: "url(" + nowImage + ")", backgroundSize: "100%"}}>
@@ -109,12 +134,45 @@ function NowNextSchedule({now, next}) {
       </Box>
     </Box>
   )
+  */
+  return (
+    <Box sx={{ display: 'grid', width: '1045px', gridTemplateRows: '1fr 1fr 1fr',  marginTop: '0px', marginRight: '55px'}}>
+      <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6)", marginBottom: "55px"}}>
+        <img src={nowImage} height='200px'/>
+        <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{nowTitle}</Typography>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowEpisode}</Typography>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowSynopsis}</Typography>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowStart}</Typography>
+        </Box>
+      </Box>
+      <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6 )", marginBottom: "55px"}}>
+        <img src={nextImage} height='200px'/>
+        <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{nextTitle}</Typography>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextEpisode}</Typography>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextSynopsis}</Typography>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextStart}</Typography>
+        </Box>
+      </Box>
+      <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6 )"}}>
+        <img src={laterImage} height='200px'/>
+        <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{laterTitle}</Typography>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterEpisode}</Typography>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterSynopsis}</Typography>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterStart}</Typography>
+        </Box>
+      </Box>
+    </Box>
+  )
 }
 
 function ScheduleSection({ params }) {
   const [on, setOn] = useState(false);
   const [now, setNow] = useState();
   const [next, setNext] = useState();
+  const [later, setLater] = useState();
   let eventTime;
   const FALSE = true;
 
@@ -134,13 +192,11 @@ function ScheduleSection({ params }) {
           const datetimeNOW = (date.getFullYear() + "-" + ("0" + (date.getMonth()+1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + "T" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":00Z");
           const datetimeTMW = (date.getFullYear() + "-" + ("0" + (date.getMonth()+1)).slice(-2) + "-" + ("0" + (date.getDate() + 1)).slice(-2) + "T" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":00Z");
           const url = "https://ws-syndication.api.bbci.co.uk/api/broadcasts?page_size=100&api-key=zRS5WtBPR6djXlWDOgkk4B0yHncsMeJ0&sid=bbc_afghan_radio&start_from=" + datetimeNOW + "&end_to=" + datetimeTMW;
-          console.log(url);
+
           const r2 = await fetch(url);
           if (r2.ok) {
           const data = await r2.json();
-          //console.log(data)
           const items = data["ws_syndication"]["results"]["items"];
-          //console.log(items);
           scheduleItemCount = items.length;
           schedule = [];
           for (let i = 0; i < items.length; i++) {
@@ -152,7 +208,6 @@ function ScheduleSection({ params }) {
             let thumbnail = items[i]["broadcast"]["image"]["attr"]["template_url"];
             try {
               thumbnail = thumbnail.replace("{recipe}", "960x540"); //"960x540"
-              console.log(thumbnail);
             } catch {
               thumbnail = "NO IMAGE"
             }
@@ -173,15 +228,13 @@ function ScheduleSection({ params }) {
           }
   
           setNow(schedule[counter2]);
+          setNext(schedule[counter2 + 1]);
           if (counter2 +1 <= scheduleItemCount) {
-            setNext(schedule[counter2 + 1]);
+            setLater(schedule[counter2 + 2]);
           } else {
-            setNext([]);
+            setLater([]);
           }
           counter2 = counter2 + 1;
-  
-          console.log(now);
-          console.log(next); 
         } catch {
           console.log("No Schedule Has Been Downloaded Yet")
         }
@@ -192,7 +245,7 @@ function ScheduleSection({ params }) {
   });
 
   return (
-    <NowNextSchedule now={now} next={next} />
+    <NowNextSchedule now={now} next={next} later={later} />
   );
 }
 
@@ -202,20 +255,29 @@ function NowNext({ headline, styling }) {
   let seriesEpisode;
   let eventTitle;
   let eventTime;
+  let picture;
 
   try{
     brand = headline.headline;
     seriesEpisode = headline.description;
     eventTime = headline.date;
+    console.log(headline.image);
+    if (headline.image == false) {
+      picture = defaultImg;
+    } else {
+      picture = headline.image;
+    }
+    
   } catch {
     console.log("No Data Yet")
   }
 
   return (
     <Box sx={{
-      width: '1680px', height: '200px',
-      display: 'grid', gridTemplateRows: '1fr 1fr 1fr', paddingLeft: '10px', paddingRight: '10px'
+      width: '600px', height: '710px',
+      display: 'grid', gridTemplateRows: '1fr 1fr'
     }}>
+      <img src={picture} width='600px' height='auto'/>
       <Box
         sx={{
           display: 'flex',
@@ -225,21 +287,21 @@ function NowNext({ headline, styling }) {
         }}
       >
       </Box>
-      <Box sx={{direction: 'rtl',}}>
+      <Box sx={{direction: 'rtl', paddingRight: '10px'}}>
         <Fade in={true} timeout={500}>
           <Typography
             fontFamily={'BBCReithSans_W_Bd'}
-            fontSize={'2.6667rem'}>{brand}</Typography>
+            fontSize={'3rem'}>{brand}</Typography>
         </Fade>
         <Fade in={true} timeout={500}>
           <Typography
             fontFamily={'BBCReithSans_W_Md'}
-            fontSize={'2.2rem'}>{seriesEpisode}</Typography>
+            fontSize={'2rem'}>{seriesEpisode}</Typography>
         </Fade>
         <Fade in={true} timeout={500}>
           <Typography
-            fontFamily={'BBCReithSans_W_Bd'}
-            fontSize={'1.7rem'}>Published: {eventTime}</Typography>
+            fontFamily={'BBCReithSans_W_Md'}
+            fontSize={'1.5rem'}>Published: {eventTime}</Typography>
         </Fade>
       </Box>
     </Box>
@@ -283,7 +345,7 @@ function Bottom({ params }) {
 
         let news = [];
         const request = new XMLHttpRequest();
-        request.open("GET", "https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page&mixins=summary", false);
+        request.open("GET", "https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page&mixins=summary,thumbnail_images", false);
         request.send(null);
 
         if (request.status === 200) {
@@ -295,6 +357,7 @@ function Bottom({ params }) {
           let headline = "";
           let description = "";
           let date = "";
+          let image = "";
           newsItemCount = item.length;
           for (let i = 0; i < item.length; i++) {
             headline = (item[i].childNodes[1].childNodes[0].nodeValue);
@@ -305,7 +368,21 @@ function Bottom({ params }) {
               description = ("No Summary!");
               date = (item[i].childNodes[7].childNodes[0].nodeValue);
             }
-            news.push({'headline': headline, 'description': description, 'date': date});
+
+            date = (item[i].getElementsByTagName('pubDate')[0].childNodes[0].nodeValue)
+            headline = (item[i].getElementsByTagName('title')[0].childNodes[0].nodeValue);
+            try{
+              description = (item[i].getElementsByTagName('description')[0].childNodes[0].nodeValue);
+            } catch {
+              description = false;
+            }  
+            try{
+              image = (item[i].getElementsByTagName('media:thumbnail')[0].attributes[0].nodeValue);
+            } catch {
+              image = false;
+            }
+
+            news.push({'headline': headline, 'description': description, 'date': date, 'image': image});
           }
           
           if (counter == newsItemCount) {
@@ -341,14 +418,14 @@ function Bottom({ params }) {
         timeout={500}>
         <Box sx={styling === 'grownup' ?
           {
-            height: '200px', width: '1700px', color: 'white',
-            background: 'linear-gradient(to left, rgba(187, 24, 25, 1), rgba(187, 24, 25, 1))',
-            display: 'grid', gridTemplateColumns: '1fr', marginbottom: '100px', marginLeft: '110px'
+            height: '710px', width: '600px', color: 'white',
+            background: 'rgba(187, 24, 25, 0.6)',
+            display: 'grid', gridTemplateColumns: '1fr'
           }
           : {
-            height: '200px', width: '1700px', color: 'black',
+            height: '710px', width: '600px', color: 'black',
             background: 'linear-gradient(to right, rgba(255, 255, 255, .9), rgba(255, 255, 255, .9))',
-            display: 'grid', gridTemplateColumns: '1fr', marginbottom: '100px', marginLeft: '110px'
+            display: 'grid', gridTemplateColumns: '1fr'
           }}>
           <Box display='flex' alignItems='center'>
             <NowNext headline={headline} styling={styling} />
@@ -397,7 +474,7 @@ export default function App(params) {
     <Paper>
       <Box sx={{
         width: 'auto', height: '100vh',
-        display: 'grid', gridTemplateRows: '110px 200px 500px 200px 24px'
+        display: 'grid', gridTemplateRows: '110px 150px 710px'
       }}>
         <Box>
         <video className='videoTag' autoPlay loop width='1920'
@@ -413,9 +490,9 @@ export default function App(params) {
           <Box></Box>
           <Box></Box>
         </Box>
-        <ScheduleSection params={params} />
-        <Bottom params={params} />
-        <Box>
+        <Box sx={{ display: 'grid', width: '1700px', gridTemplateColumns: '1fr 1fr',  marginTop: '0px', marginLeft: '110px', marginRight: '110px'}}>
+          <ScheduleSection params={params} />
+          <Bottom params={params} />
         </Box>
       </Box>
     </Paper>
