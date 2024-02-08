@@ -295,7 +295,6 @@ function Bottom({ params }) {
   const [headline, setHeadline] = useState();
   const [steady, setSteady] = useState(false);
   const containerRef = React.useRef(null);
-  var newsItemCount = 0;
   let eventTime;
 
   const FALSE = true;
@@ -304,6 +303,7 @@ function Bottom({ params }) {
   // 5 second timer
   useEffect(() => {
     let interval = null;
+    let newsItemCount = 0;
     interval = setInterval(() => {
       (async () => {
         const sOfm = (eventTime) ;
