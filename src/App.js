@@ -187,7 +187,7 @@ function ScheduleSection({ params }) {
           setOn(FALSE);
         }
         
-        if (downloadSchedule == true) {
+        if (downloadSchedule === true) {
           const date = new Date();
           const datetimeNOW = (date.getFullYear() + "-" + ("0" + (date.getMonth()+1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + "T" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":00Z");
           const datetimeTMW = (date.getFullYear() + "-" + ("0" + (date.getMonth()+1)).slice(-2) + "-" + ("0" + (date.getDate() + 1)).slice(-2) + "T" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":00Z");
@@ -219,11 +219,11 @@ function ScheduleSection({ params }) {
           }
         }
         try{
-          if (counter2 + 1 == scheduleItemCount) {
+          if (counter2 + 1 === scheduleItemCount) {
             downloadSchedule = true;
           }
   
-          if (counter2 == scheduleItemCount) {
+          if (counter2 === scheduleItemCount) {
             counter2 = 0;          
           }
   
@@ -262,7 +262,7 @@ function NowNext({ headline, styling }) {
     seriesEpisode = headline.description;
     eventTime = headline.date;
     console.log(headline.image);
-    if (headline.image == false) {
+    if (headline.image === false) {
       picture = defaultImg;
     } else {
       picture = headline.image;
@@ -361,7 +361,7 @@ function Bottom({ params }) {
           newsItemCount = item.length;
           for (let i = 0; i < item.length; i++) {
             headline = (item[i].childNodes[1].childNodes[0].nodeValue);
-            if (item[i].childNodes[7].nodeName == 'description') {
+            if (item[i].childNodes[7].nodeName === 'description') {
               description = (item[i].childNodes[7].childNodes[0].nodeValue);
               date = (item[i].childNodes[9].childNodes[0].nodeValue);
             } else {
@@ -385,7 +385,7 @@ function Bottom({ params }) {
             news.push({'headline': headline, 'description': description, 'date': date, 'image': image});
           }
           
-          if (counter == newsItemCount) {
+          if (counter === newsItemCount) {
             counter = 0;
           }
 
