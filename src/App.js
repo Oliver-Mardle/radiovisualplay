@@ -7,6 +7,13 @@ import Typography from '@mui/material/Typography';
 import BBCNews from './BBC_News_Linear_World_Service_LR_RGB.jpg'
 //import sample from  './wsrv.webm';
 import defaultImg from './default.png';
+const cors = require("cors");
+
+cors(
+  {
+    origin: "*",
+  }
+)
 
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
