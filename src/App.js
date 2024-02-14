@@ -5,15 +5,8 @@ import Fade from '@mui/material/Fade';
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography';
 import BBCNews from './BBC_News_Linear_World_Service_LR_RGB.jpg'
-//import sample from  './wsrv.webm';
+import sample from  './wsrv.webm';
 import defaultImg from './default.png';
-const cors = require("cors");
-
-cors(
-  {
-    origin: "*",
-  }
-)
 
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -28,21 +21,18 @@ function NowNextSchedule({now, next, later}) {
   let nowEpisode;
   let nowSynopsis;
   let nowStart;
-  //let nowDuration;
   let nowImage;
 
   let nextTitle;
   let nextEpisode;
   let nextSynopsis;
   let nextStart;
-  //let nextDuration;
   let nextImage;
 
   let laterTitle;
   let laterEpisode;
   let laterSynopsis;
   let laterStart;
-  //let laterDuration;
   let laterImage;
 
   try {
@@ -55,7 +45,6 @@ function NowNextSchedule({now, next, later}) {
     let nowDateTime = (now.start.replace("Z", "")).split("T");
     let nowDay = daysOfWeek[new Date(nowDateTime[0]).getDay()];
     nowStart = nowDay + " at " + nowDateTime[1] + " GMT";
-    //nowDuration = now.duration;
     if (now.thumbnail != null) {
       nowImage = now.thumbnail;
     }
@@ -74,7 +63,6 @@ function NowNextSchedule({now, next, later}) {
     let nextDateTime = (next.start.replace("Z", "")).split("T");
     let nextDay = daysOfWeek[new Date(nextDateTime[0]).getDay()];
     nextStart = nextDay + " at " + nextDateTime[1] + " GMT";
-    //nextDuration = next.duration;
     if (next.thumbnail != null) {
       nextImage = next.thumbnail;
     }
@@ -102,27 +90,6 @@ function NowNextSchedule({now, next, later}) {
     console.log("No Schedule Yet");
   }
 
-  /*
-  return (
-    <Box sx={{ display: 'grid', width: '1700px', gridTemplateColumns: '1fr 1fr',  marginTop: '0px', marginLeft: '110px', marginRight: '110px'}}>
-      <Box sx={{display: 'grid', gridTemplateRow: '1fr 1fr 1fr 1fr 1fr', height: '445px', width: '795px', color: 'white', background: "rgba(187, 24, 25, 1)", backgroundImage: "url(" + nowImage + ")", backgroundSize: "100%"}}>
-        <Typography marginLeft={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'4rem'}>{nowTitle}</Typography>
-        <Typography marginLeft={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'2.2rem'}>{nowEpisode}</Typography>
-        <Typography marginLeft={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'2.2rem'}>{nowSynopsis}</Typography>
-        <Typography marginLeft={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'2.2rem'}>{nowStart}</Typography>
-        <Typography marginLeft={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'2.2rem'}>{nowDuration}</Typography>
-      </Box>
-
-      <Box sx={{display: 'grid', gridTemplateRow: '1fr 1fr 1fr 1fr 1fr', height: '445px', width: '795px', marginLeft: '55px', color: 'white', background: "rgba(187, 24, 25, 1)", backgroundImage: "url(" + nextImage + ")", backgroundSize: "100%"}}>
-        <Typography marginLeft={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'4rem'}>{nextTitle}</Typography>
-        <Typography marginLeft={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'2.2rem'}>{nextEpisode}</Typography>
-        <Typography marginLeft={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'2.2rem'}>{nextSynopsis}</Typography>
-        <Typography marginLeft={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'2.2rem'}>{nextStart}</Typography>
-        <Typography marginLeft={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'2.2rem'}>{nextDuration}</Typography>
-      </Box>
-    </Box>
-  )
-  */
   return (
     <Box sx={{ display: 'grid', width: '1045px', gridTemplateRows: '1fr 1fr 1fr',  marginTop: '0px', marginRight: '55px'}}>
       <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6)", marginBottom: "55px"}}>
@@ -248,7 +215,6 @@ function NowNext({ headline, styling }) {
     brand = headline.headline;
     seriesEpisode = headline.description;
     eventTime = headline.date;
-    console.log(headline.image);
     if (headline.image === false) {
       picture = defaultImg;
     } else {
@@ -322,68 +288,60 @@ function Bottom({ params }) {
         console.log(sOfm);
 
         let news = [];
-        const request = new XMLHttpRequest();
-        request.open("GET", "https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page&mixins=summary,thumbnail_images", false);
-        request.send(null);
+        const url = "https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page&mixins=summary,thumbnail_images";
+        let Data = "";
 
-        if (request.status === 200) {
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(request.responseText,"text/xml");
+        fetch(url)
+          .then((response) => response.text())
+          .then((RSSFeed) => {
+            Data = RSSFeed;
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(Data,"text/xml");
 
-          const item = xmlDoc.getElementsByTagName('item');
-          //console.log(item);
-          let headline = "";
-          let description = "";
-          let date = "";
-          let image = "";
-          newsItemCount = item.length;
-          for (let i = 0; i < item.length; i++) {
-            headline = (item[i].childNodes[1].childNodes[0].nodeValue);
-            if (item[i].childNodes[7].nodeName === 'description') {
-              description = (item[i].childNodes[7].childNodes[0].nodeValue);
-              date = (item[i].childNodes[9].childNodes[0].nodeValue);
-            } else {
-              description = ("No Summary!");
-              date = (item[i].childNodes[7].childNodes[0].nodeValue);
+            const item = xmlDoc.getElementsByTagName('item');
+            let headline = "";
+            let description = "";
+            let date = "";
+            let image = "";
+            newsItemCount = item.length;
+            for (let i = 0; i < item.length; i++) {
+              headline = (item[i].childNodes[1].childNodes[0].nodeValue);
+              if (item[i].childNodes[7].nodeName === 'description') {
+                description = (item[i].childNodes[7].childNodes[0].nodeValue);
+                date = (item[i].childNodes[9].childNodes[0].nodeValue);
+              } else {
+                description = ("No Summary!");
+                date = (item[i].childNodes[7].childNodes[0].nodeValue);
+              }
+
+              date = (item[i].getElementsByTagName('pubDate')[0].childNodes[0].nodeValue)
+              headline = (item[i].getElementsByTagName('title')[0].childNodes[0].nodeValue);
+              try{
+                description = (item[i].getElementsByTagName('description')[0].childNodes[0].nodeValue);
+              } catch {
+                description = false;
+              }  
+              try{
+                image = (item[i].getElementsByTagName('media:thumbnail')[0].attributes[0].nodeValue);
+              } catch {
+                image = false;
+              }
+
+              news.push({'headline': headline, 'description': description, 'date': date, 'image': image});
+            }
+            
+            if (counter === newsItemCount) {
+              counter = 0;
             }
 
-            date = (item[i].getElementsByTagName('pubDate')[0].childNodes[0].nodeValue)
-            headline = (item[i].getElementsByTagName('title')[0].childNodes[0].nodeValue);
-            try{
-              description = (item[i].getElementsByTagName('description')[0].childNodes[0].nodeValue);
-            } catch {
-              description = false;
-            }  
-            try{
-              image = (item[i].getElementsByTagName('media:thumbnail')[0].attributes[0].nodeValue);
-            } catch {
-              image = false;
-            }
-
-            news.push({'headline': headline, 'description': description, 'date': date, 'image': image});
-          }
-          
-          if (counter === newsItemCount) {
-            counter = 0;
-          }
-
-          setHeadline(news[counter]);
-          counter = counter + 1;
-
+            setHeadline(news[counter]);
+            counter = counter + 1;
+          });
         }
-      })();
+      )();
     }, 10000);
     return () => clearInterval(interval);
   });
-  /*        <Box>{steady ? <Fade in={true} timeout={1000}>
-              <Typography fontSize={'4rem'} color={iplayerPink} marginLeft={5} marginTop={3}>iPLAYER</Typography>
-            </Fade>
-            : <SequenceAnimator duration={3000} onSequenceEnd={() => setSteady(true)}>
-              {introImages.map((im, index) => (<img key={index} src={im} alt='BBC' />))}
-            </SequenceAnimator>
-          }
-          </Box
-  */
 
   console.log(`styling log ${styling}`);
   return (
@@ -449,10 +407,6 @@ function TopRight({ show }) {
 }
 
 /*
-<video className='videoTag' autoPlay loop width='1920'
-          height='1080'muted>
-          <source src={sample} type='video/webm'/>
-        </video>
 */
 
 export default function App(params) {
@@ -463,6 +417,10 @@ export default function App(params) {
         display: 'grid', gridTemplateRows: '110px 150px 710px'
       }}>
         <Box>
+          <video className='videoTag' autoPlay loop width='1920'
+            height='1080'muted>
+            <source src={sample} type='video/webm'/>
+          </video>
         </Box>
         <Box sx={{ display: 'grid', width: '1700px', gridTemplateColumns: '1fr 1fr 1fr', gridTemplateRows: '1fr 1fr',  marginTop: '0px', marginLeft: '110px', marginRight: '110px'}}>
           <TopLeft show={params.tl}/>
