@@ -230,31 +230,20 @@ function NowNext({ headline, styling }) {
       width: '600px', height: '710px',
       display: 'grid', gridTemplateRows: '1fr 1fr'
     }}>
-      <img alt="" src={picture} width='600px' height='auto'/>
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignContent: 'flex-end',
-          direction: 'rtl',
-        }}
-      >
+      <img alt="" src={picture} width='600px' height='340px'/>
+      
+      <Box sx={{direction: 'rtl', paddingLeft: '10px', paddingRight: '10px'}}>
+        <Fade in={true} timeout={500}>
+          <Typography fontFamily={'BBCReithSans_W_Bd'} fontSize={'3rem'}>{brand}</Typography>
+        </Fade>
+        <Fade in={true} timeout={500}>
+          <Typography fontFamily={'BBCReithSans_W_Md'} fontSize={'1.8rem'}>{seriesEpisode}</Typography>
+        </Fade>
+        
       </Box>
-      <Box sx={{direction: 'rtl', paddingRight: '10px'}}>
+      <Box>
         <Fade in={true} timeout={500}>
-          <Typography
-            fontFamily={'BBCReithSans_W_Bd'}
-            fontSize={'3rem'}>{brand}</Typography>
-        </Fade>
-        <Fade in={true} timeout={500}>
-          <Typography
-            fontFamily={'BBCReithSans_W_Md'}
-            fontSize={'2rem'}>{seriesEpisode}</Typography>
-        </Fade>
-        <Fade in={true} timeout={500}>
-          <Typography
-            fontFamily={'BBCReithSans_W_Md'}
-            fontSize={'1.5rem'}>Published: {eventTime}</Typography>
+          <Typography fontFamily={'BBCReithSans_W_Md'} fontSize={'1.5rem'} paddingLeft={'10px'} paddingBottom={'5px'}>Published: {eventTime}</Typography>
         </Fade>
       </Box>
     </Box>
