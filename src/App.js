@@ -397,7 +397,7 @@ function TopLeft({ show }) {
   });
   return (
     <Box>
-      <Typography fontFamily={'BBCReithSans_W_Md'} fontSize={'2.2rem'}>{TimeDateString}</Typography>
+      <Typography fontFamily={'BBCReithSerif_W_Bd'} fontSize={'2.2rem'}>{TimeDateString}</Typography>
     </Box>
   );
 }
