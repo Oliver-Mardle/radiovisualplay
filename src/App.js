@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import BBCNews from './BBC_News_Linear_World_Service_LR_RGB.jpg'
 import sample from  './wsrv.webm';
 import defaultImg from './default.png';
+import TextTransition, { presets } from 'react-text-transition';
 
 const config = require('./config');
 
@@ -95,31 +96,37 @@ function NowNextSchedule({now, next, later}) {
   return (
     <Box sx={{ display: 'grid', width: '1045px', gridTemplateRows: '1fr 1fr 1fr',  marginTop: '0px', marginRight: '55px'}}>
       <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6)", marginBottom: "55px"}}>
-        <img alt="" src={nowImage} height='200px'/>
-        <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{nowTitle}</Typography>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowEpisode}</Typography>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowSynopsis}</Typography>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowStart}</Typography>
-        </Box>
+        <TextTransition springConfig={presets.stiff}><img alt="" src={nowImage} height='200px'/></TextTransition>
+        <TextTransition springConfig={presets.stiff}>
+          <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{nowTitle}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowEpisode}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowSynopsis}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowStart}</Typography>
+          </Box>
+        </TextTransition>  
       </Box>
       <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6 )", marginBottom: "55px"}}>
-        <img alt="" src={nextImage} height='200px'/>
-        <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{nextTitle}</Typography>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextEpisode}</Typography>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextSynopsis}</Typography>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextStart}</Typography>
-        </Box>
+        <TextTransition springConfig={presets.stiff}><img alt="" src={nextImage} height='200px'/></TextTransition>
+        <TextTransition springConfig={presets.stiff}>
+          <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{nextTitle}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextEpisode}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextSynopsis}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextStart}</Typography>
+          </Box>
+        </TextTransition>
       </Box>
-      <Box alt="" sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6 )"}}>
-        <img alt="" src={laterImage} height='200px'/>
-        <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{laterTitle}</Typography>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterEpisode}</Typography>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterSynopsis}</Typography>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterStart}</Typography>
-        </Box>
+      <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6 )"}}>
+       <TextTransition springConfig={presets.stiff}><img alt="" src={laterImage} height='200px'/></TextTransition>
+        <TextTransition springConfig={presets.stiff}>
+          <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{laterTitle}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterEpisode}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterSynopsis}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterStart}</Typography>
+          </Box>
+        </TextTransition>
       </Box>
     </Box>
   )
@@ -238,20 +245,23 @@ function NowNext({ headline, styling }) {
       width: '600px', height: '710px',
       display: 'grid', gridTemplateRows: '340px 370px'
     }}>
-      <img alt="" src={picture} width='600px' height='340px'/>
-      
-      <Box sx={{display: 'grid', gridTemplateRows: 'min-content 1fr', direction: 'rtl', paddingLeft: '10px', paddingRight: '10px', height: '370px'}}>
-        <Box sx={{height: 'fit-content'}}>
-          <Fade in={true} timeout={500}>
-            <Typography fontFamily={'BBCReithSans_W_Bd'} fontSize={'3rem'}>{brand}</Typography>
-          </Fade>
+      <TextTransition springConfig={presets.stiff}>
+        <Fade in={true}><img alt="" src={picture} width='600px' height='340px'/></Fade>
+      </TextTransition>
+      <TextTransition springConfig={presets.stiff}>
+        <Box sx={{display: 'grid', gridTemplateRows: 'min-content 1fr', direction: 'rtl', paddingLeft: '10px', paddingRight: '10px', height: '370px'}}>
+          <Box sx={{height: 'fit-content'}}>
+            <Fade in={true} timeout={500}>
+              <Typography fontFamily={'BBCReithSans_W_Bd'} fontSize={'3rem'}>{brand}</Typography>
+            </Fade>
+          </Box>
+          <Box sx={{height: 'fit-content'}}>
+            <Fade in={true} timeout={500}>
+              <Typography fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{seriesEpisode}</Typography>
+            </Fade>
+          </Box>
         </Box>
-        <Box sx={{height: 'fit-content'}}>
-          <Fade in={true} timeout={500}>
-            <Typography fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{seriesEpisode}</Typography>
-          </Fade>
-        </Box>
-      </Box>
+      </TextTransition>
     </Box>
   );
 }
