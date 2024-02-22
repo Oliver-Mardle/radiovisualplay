@@ -8,6 +8,8 @@ import BBCNews from './BBC_News_Linear_World_Service_LR_RGB.jpg'
 import sample from  './wsrv.webm';
 import defaultImg from './default.png';
 
+const config = require('./config');
+
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 let counter = 0;
@@ -50,7 +52,7 @@ function NowNextSchedule({now, next, later}) {
     }
     
   } catch {
-    console.log("No Schedule Yet");
+    console.log("No Now Schedule Data");
   }
 
   try {
@@ -68,7 +70,7 @@ function NowNextSchedule({now, next, later}) {
     }
 
   } catch {
-    console.log("No Schedule Yet");
+    console.log("No Next Schedule Data");
   }
 
   try {
@@ -87,7 +89,7 @@ function NowNextSchedule({now, next, later}) {
     }
 
   } catch {
-    console.log("No Schedule Yet");
+    console.log("No Later Schedule Data");
   }
 
   return (
@@ -147,7 +149,7 @@ function ScheduleSection({ params }) {
           const date = new Date();
           const datetimeNOW = (date.getFullYear() + "-" + ("0" + (date.getMonth()+1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + "T" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":00Z");
           const datetimeTMW = (date.getFullYear() + "-" + ("0" + (date.getMonth()+1)).slice(-2) + "-" + ("0" + (date.getDate() + 1)).slice(-2) + "T" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":00Z");
-          const url = "https://ws-syndication.api.bbci.co.uk/api/broadcasts?page_size=100&api-key=zRS5WtBPR6djXlWDOgkk4B0yHncsMeJ0&sid=bbc_afghan_radio&start_from=" + datetimeNOW + "&end_to=" + datetimeTMW;
+          const url = "https://ws-syndication.api.bbci.co.uk/api/broadcasts?page_size=100&api-key=" + config.app.schedulesKey + "&sid=" + config.app.sid + "&start_from=" + datetimeNOW + "&end_to=" + datetimeTMW;
 
           const r2 = await fetch(url);
           if (r2.ok) {
@@ -163,7 +165,7 @@ function ScheduleSection({ params }) {
             let duration = items[i]["version"]["duration"];
             let thumbnail = items[i]["broadcast"]["image"]["attr"]["template_url"];
             try {
-              thumbnail = thumbnail.replace("{recipe}", "960x540"); //"960x540"
+              thumbnail = thumbnail.replace("{recipe}", "960x540");
             } catch {
               thumbnail = "NO IMAGE"
             }
@@ -174,15 +176,12 @@ function ScheduleSection({ params }) {
           downloadSchedule = false;
           }
         }
+        if (counter2 === scheduleItemCount) {
+          console.log("Download a new schedule!");
+          downloadSchedule = true;
+          counter2 = 0;          
+        }
         try{
-          if (counter2 + 1 === scheduleItemCount) {
-            downloadSchedule = true;
-          }
-  
-          if (counter2 === scheduleItemCount) {
-            counter2 = 0;          
-          }
-  
           setNow(schedule[counter2]);
           setNext(schedule[counter2 + 1]);
           if (counter2 +1 <= scheduleItemCount) {
@@ -191,8 +190,9 @@ function ScheduleSection({ params }) {
             setLater([]);
           }
           counter2 = counter2 + 1;
-        } catch {
-          console.log("No Schedule Has Been Downloaded Yet")
+        } catch (error) {
+          console.log(error);
+          console.log("No Schedule Has Been Downloaded Yet");
         }
             
       })();
@@ -208,13 +208,13 @@ function ScheduleSection({ params }) {
 function NowNext({ headline, styling }) {
   let brand;
   let seriesEpisode;
-  let eventTime;
+  //let eventTime;
   let picture;
 
   try{
     brand = headline.headline;
     seriesEpisode = headline.description;
-    eventTime = headline.date;
+    //eventTime = headline.date;
     if (headline.image === false) {
       picture = defaultImg;
     } else {
@@ -225,26 +225,32 @@ function NowNext({ headline, styling }) {
     console.log("No Data Yet")
   }
 
-  return (
-    <Box sx={{
-      width: '600px', height: '710px',
-      display: 'grid', gridTemplateRows: '1fr 1fr'
-    }}>
-      <img alt="" src={picture} width='600px' height='340px'/>
-      
-      <Box sx={{direction: 'rtl', paddingLeft: '10px', paddingRight: '10px'}}>
-        <Fade in={true} timeout={500}>
-          <Typography fontFamily={'BBCReithSans_W_Bd'} fontSize={'3rem'}>{brand}</Typography>
-        </Fade>
-        <Fade in={true} timeout={500}>
-          <Typography fontFamily={'BBCReithSans_W_Md'} fontSize={'1.8rem'}>{seriesEpisode}</Typography>
-        </Fade>
-        
-      </Box>
+  /*
       <Box>
         <Fade in={true} timeout={500}>
           <Typography fontFamily={'BBCReithSans_W_Md'} fontSize={'1.5rem'} paddingLeft={'10px'} paddingBottom={'5px'}>Published: {eventTime}</Typography>
         </Fade>
+      </Box>
+  */
+
+  return (
+    <Box sx={{
+      width: '600px', height: '710px',
+      display: 'grid', gridTemplateRows: '340px 370px'
+    }}>
+      <img alt="" src={picture} width='600px' height='340px'/>
+      
+      <Box sx={{display: 'grid', gridTemplateRows: 'min-content 1fr', direction: 'rtl', paddingLeft: '10px', paddingRight: '10px', height: '370px'}}>
+        <Box sx={{height: 'fit-content'}}>
+          <Fade in={true} timeout={500}>
+            <Typography fontFamily={'BBCReithSans_W_Bd'} fontSize={'3rem'}>{brand}</Typography>
+          </Fade>
+        </Box>
+        <Box sx={{height: 'fit-content'}}>
+          <Fade in={true} timeout={500}>
+            <Typography fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{seriesEpisode}</Typography>
+          </Fade>
+        </Box>
       </Box>
     </Box>
   );
@@ -277,7 +283,7 @@ function Bottom({ params }) {
         console.log(sOfm);
 
         let news = [];
-        const url = "https://information-syndication.api.bbc.com/articles?api_key=NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp&feed=pashto-front-page&mixins=summary,thumbnail_images";
+        const url = "https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + config.app.feed + "&mixins=summary,thumbnail_images";
         let Data = "";
 
         fetch(url)
