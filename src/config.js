@@ -1,6 +1,6 @@
 const config = {
     app: {
-        sid: 'bbc_afghan_radio',
+        sid: 'bbc_afghan_tv',
         feed: 'pashto-front-page',
         schedulesKey: 'zRS5WtBPR6djXlWDOgkk4B0yHncsMeJ0',
         schedulesKey2: '2539lpzfXw9B3Vosnpcd4hI9RnFV7f0v',
