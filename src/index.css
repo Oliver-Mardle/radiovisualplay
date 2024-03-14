@@ -29,3 +29,18 @@ img {
   font-family: 'BBCReithSans_W_ExBd';
   src: local('BBCReithSans_W_ExBd'), url(./fonts/BBCReithSans_W_ExBd.woff2) format('woff2');
 }
+
+@font-face {
+  font-family: 'BBCReithQalam_W_Rg';
+  src: local('BBCReithQalam_W_Rg'), url(./fonts/BBCReithQalam_W_Rg.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'BBCReithQalam_W_Bd';
+  src: local('BBCReithQalam_W_Bd'), url(./fonts/BBCReithQalam_W_Bd.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'BBCReithQalam_W_XBd';
+  src: local('BBCReithQalam_W_XBd'), url(./fonts/BBCReithQalam_W_XBd.woff2) format('woff2');
+}

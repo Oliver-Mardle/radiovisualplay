@@ -1,55 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Slide from '@mui/material/Slide';
-import Fade from '@mui/material/Fade';
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography';
-import BBCNews from './BBC_News_Linear_World_Service_LR_RGB.jpg'
-import sample from  './wsrv.webm';
+import BBCNews from './BBC_News_Afghanistan.png'
+import BBCNews2 from './BBC_News_EN.png'
+import schedule_default from './schedules_holding_image.jpg'
+import sample from  './ReithLoop1min.mp4';
 import defaultImg from './default.png';
 import TextTransition, { presets } from 'react-text-transition';
 
 const config = require('./config');
 
-const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 let counter = 0;
 let counter2 = 0;
 var scheduleItemCount = 0;
 var downloadSchedule = true;
 let schedule = [];
+var daysOfWeek = "";
+var months = "";
+var numbers = "";
+var connectors = "";
+
+function Translate( num, charSet ) {
+  const number = num;
+  const characterSet = charSet;
+  let splitNumber = Array.from(number.toString()).map(Number);
+  let newNumber = "";
+  for (let i = 0; i < splitNumber.length; i++) {
+    newNumber = newNumber + characterSet[splitNumber[i]].toString();
+  }
+  return newNumber;
+}
 
 function NowNextSchedule({now, next, later}) {
   let nowTitle;
-  let nowEpisode;
   let nowSynopsis;
   let nowStart;
   let nowImage;
 
   let nextTitle;
-  let nextEpisode;
   let nextSynopsis;
   let nextStart;
   let nextImage;
 
   let laterTitle;
-  let laterEpisode;
   let laterSynopsis;
   let laterStart;
   let laterImage;
 
   try {
     nowTitle = now.title;
-    nowEpisode = now.episode;
     nowSynopsis = now.synopsis;
     if (nowSynopsis != null) {
       nowSynopsis = nowSynopsis.short;
     }
     let nowDateTime = (now.start.replace("Z", "")).split("T");
+    let nowTime = nowDateTime[1].split(":");
+    let nowHours = Translate(nowTime[0], numbers);
+    let nowMinutes = Translate(nowTime[1], numbers);
     let nowDay = daysOfWeek[new Date(nowDateTime[0]).getDay()];
-    nowStart = nowDay + " at " + nowDateTime[1] + " GMT";
-    if (now.thumbnail != null) {
+    nowStart = nowDay + " " + connectors[1] + " " + nowHours + ":" + nowMinutes + " " + connectors[0];
+    if (now.thumbnail !== 'NO IMAGE') {
       nowImage = now.thumbnail;
+    } else {
+      nowImage = schedule_default;
     }
     
   } catch {
@@ -58,16 +73,20 @@ function NowNextSchedule({now, next, later}) {
 
   try {
     nextTitle = next.title;
-    nextEpisode = next.episode;
     nextSynopsis = next.synopsis;
     if (nextSynopsis != null) {
       nextSynopsis = nextSynopsis.short;
     }
     let nextDateTime = (next.start.replace("Z", "")).split("T");
+    let nextTime = nextDateTime[1].split(":");
+    let nextHours = Translate(nextTime[0], numbers);
+    let nextMinutes = Translate(nextTime[1], numbers);
     let nextDay = daysOfWeek[new Date(nextDateTime[0]).getDay()];
-    nextStart = nextDay + " at " + nextDateTime[1] + " GMT";
-    if (next.thumbnail != null) {
+    nextStart = nextDay + " " + connectors[1] + " " + nextHours + ":" + nextMinutes + " " + connectors[0];
+    if (next.thumbnail !== 'NO IMAGE') {
       nextImage = next.thumbnail;
+    } else {
+      nextImage = schedule_default;
     }
 
   } catch {
@@ -76,17 +95,20 @@ function NowNextSchedule({now, next, later}) {
 
   try {
     laterTitle = later.title;
-    laterEpisode = later.episode;
     laterSynopsis = later.synopsis;
     if (laterSynopsis != null) {
       laterSynopsis = laterSynopsis.short;
     }
     let laterDateTime = (later.start.replace("Z", "")).split("T");
+    let laterTime = laterDateTime[1].split(":");
+    let laterHours = Translate(laterTime[0], numbers);
+    let laterMinutes = Translate(laterTime[1], numbers);
     let laterDay = daysOfWeek[new Date(laterDateTime[0]).getDay()];
-    laterStart = laterDay + " at " + laterDateTime[1] + " GMT";
-    //laterDuration = later.duration;
-    if (later.thumbnail != null) {
+    laterStart = laterDay + " " + connectors[1] + " " + laterHours + ":" + laterMinutes + " " + connectors[0];
+    if (later.thumbnail !== 'NO IMAGE') {
       laterImage = later.thumbnail;
+    } else {
+      laterImage = schedule_default;
     }
 
   } catch {
@@ -94,45 +116,43 @@ function NowNextSchedule({now, next, later}) {
   }
 
   return (
-    <Box sx={{ display: 'grid', width: '1045px', gridTemplateRows: '1fr 1fr 1fr',  marginTop: '0px', marginRight: '55px'}}>
-      <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6)", marginBottom: "55px"}}>
-        <TextTransition springConfig={presets.stiff}><img alt="" src={nowImage} height='200px'/></TextTransition>
+    <Box sx={{ display: 'grid', fontFamily: 'BBCReithSans_W_Md', width: '910pxpx', gridTemplateRows: '1fr 1fr 1fr',  marginTop: '0px', marginRight: '50px'}}>
+      <Box sx={{display: 'grid', gridTemplateColumns: '583px 327px', height: '184px', width: '910px', color: 'black', background: "#EBEBEB", marginBottom: "50px", borderRadius: '10px', overflow: 'hidden'}}>
         <TextTransition springConfig={presets.stiff}>
-          <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'} fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{nowTitle}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowEpisode}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowSynopsis}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nowStart}</Typography>
+          <Box sx={{height: '154px', width: '583px'}}>
+            <Typography dir='auto' color='red' marginLeft={'10px'} marginRight={'10px'} fontFamily={'BBCReithQalam_W_Bd'} fontSize={'42px'}>{nowTitle}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'24px'}>{nowSynopsis}</Typography>
           </Box>
-        </TextTransition>  
-      </Box>
-      <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6 )", marginBottom: "55px"}}>
-        <TextTransition springConfig={presets.stiff}><img alt="" src={nextImage} height='200px'/></TextTransition>
-        <TextTransition springConfig={presets.stiff}>
-          <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{nextTitle}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextEpisode}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextSynopsis}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{nextStart}</Typography>
-          </Box>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Rg'} fontSize={'20px'}>{nowStart}</Typography>
         </TextTransition>
+        <TextTransition springConfig={presets.stiff}><img alt="" src={nowImage} height='184' borderRadius='10px'/></TextTransition>  
       </Box>
-      <Box sx={{display: 'grid', gridTemplateColumns: '360px 685px', height: '200px', width: '1045px', color: 'white', background: "rgba(187, 24, 25, 0.6 )"}}>
-       <TextTransition springConfig={presets.stiff}><img alt="" src={laterImage} height='200px'/></TextTransition>
+      <Box sx={{display: 'grid', gridTemplateColumns: '583px 327px', height: '184px', width: '910px', color: 'black', background: "#EBEBEB", marginBottom: "50px", borderRadius: '10px', overflow: 'hidden'}}>
         <TextTransition springConfig={presets.stiff}>
-          <Box sx={{display: 'grid', gridTemplateRows: '1fr 1fr 1fr 1fr', height: '200px', width: '685px'}}>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'3rem'}>{laterTitle}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterEpisode}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterSynopsis}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{laterStart}</Typography>
+          <Box sx={{height: '154px', width: '583px'}}>
+            <Typography dir='auto' color='red' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'42px'}>{nextTitle}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'24px'}>{nextSynopsis}</Typography>
           </Box>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Rg'} fontSize={'20px'}>{nextStart}</Typography>
         </TextTransition>
+        <TextTransition springConfig={presets.stiff}><img alt="" src={nextImage} height='184px' borderRadius='10px'/></TextTransition>
+      </Box>
+      <Box sx={{display: 'grid', gridTemplateColumns: '583px 327px', height: '184px', width: '910px', color: 'black', background: "#EBEBEB", borderRadius: '10px', overflow: 'hidden'}}>
+        <TextTransition springConfig={presets.stiff}>
+          <Box sx={{height: '154px', width: '583px'}}>
+            <Typography dir='auto' color='red' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'42px'}>{laterTitle}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'24px'}>{laterSynopsis}</Typography>
+          </Box>
+          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Rg'} fontSize={'20px'}>{laterStart}</Typography>
+        </TextTransition>
+        <TextTransition springConfig={presets.stiff}><img alt="" src={laterImage} height='184px' borderRadius='10px'/></TextTransition>
       </Box>
     </Box>
   )
 }
 
 function ScheduleSection({ params }) {
+  const sid = params.sid || config.app.sid;
   const [on, setOn] = useState(false);
   const [now, setNow] = useState();
   const [next, setNext] = useState();
@@ -156,7 +176,8 @@ function ScheduleSection({ params }) {
           const date = new Date();
           const datetimeNOW = (date.getFullYear() + "-" + ("0" + (date.getMonth()+1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + "T" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":00Z");
           const datetimeTMW = (date.getFullYear() + "-" + ("0" + (date.getMonth()+1)).slice(-2) + "-" + ("0" + (date.getDate() + 1)).slice(-2) + "T" + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2) + ":00Z");
-          const url = "https://ws-syndication.api.bbci.co.uk/api/broadcasts?page_size=100&api-key=" + config.app.schedulesKey + "&sid=" + config.app.sid + "&start_from=" + datetimeNOW + "&end_to=" + datetimeTMW;
+          const url = "https://ws-syndication.api.bbci.co.uk/api/broadcasts?page_size=100&api-key=" + config.app.schedulesKey + "&sid=" + sid + "&start_from=" + datetimeNOW + "&end_to=" + datetimeTMW;
+          //const url = "http://programmes.api.bbc.com/nitro/api/broadcasts?api_key=" + config.app.schedulesKey2 + "&start_from=" + datetimeNOW + "&end_to=" + datetimeTMW + "&sid=" + config.app.sid;
 
           const r2 = await fetch(url);
           if (r2.ok) {
@@ -208,20 +229,20 @@ function ScheduleSection({ params }) {
   });
 
   return (
-    <NowNextSchedule now={now} next={next} later={later} />
+    <NowNextSchedule now={now} next={next} later={later}/>
   );
 }
 
 function NowNext({ headline, styling }) {
   let brand;
-  let seriesEpisode;
-  //let eventTime;
+  //let seriesEpisode;
+  let eventTime;
   let picture;
 
   try{
     brand = headline.headline;
-    seriesEpisode = headline.description;
-    //eventTime = headline.date;
+    //seriesEpisode = headline.description;
+    eventTime = headline.date;
     if (headline.image === false) {
       picture = defaultImg;
     } else {
@@ -242,23 +263,19 @@ function NowNext({ headline, styling }) {
 
   return (
     <Box sx={{
-      width: '600px', height: '710px',
-      display: 'grid', gridTemplateRows: '340px 370px'
+      width: '740px', height: '652px'
     }}>
       <TextTransition springConfig={presets.stiff}>
-        <Fade in={true}><img alt="" src={picture} width='600px' height='340px'/></Fade>
-      </TextTransition>
-      <TextTransition springConfig={presets.stiff}>
-        <Box sx={{display: 'grid', gridTemplateRows: 'min-content 1fr', direction: 'rtl', paddingLeft: '10px', paddingRight: '10px', height: '370px'}}>
-          <Box sx={{height: 'fit-content'}}>
-            <Fade in={true} timeout={500}>
-              <Typography fontFamily={'BBCReithSans_W_Bd'} fontSize={'3rem'}>{brand}</Typography>
-            </Fade>
+        <Box sx={{height: '652px', width: '740px',
+        backgroundImage: 'linear-gradient(to bottom, rgba(45, 45, 45, 0), rgba(45, 45, 45, 0), rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 1), rgba(0, 0, 0, 1)), url('+ picture +')',
+        backgroundSize: '741px', display: 'grid', gridTemplateRows: '275px 335px 42px', direction: 'rtl'
+        }}>
+          <Box></Box>
+          <Box sx={{height: 'fit-content', paddingLeft: '10px', paddingRight: '10px'}}>
+            <Typography dir='auto' fontFamily={'BBCReithQalam_W_Rg'} fontSize={'48px'}>{brand}</Typography>
           </Box>
-          <Box sx={{height: 'fit-content'}}>
-            <Fade in={true} timeout={500}>
-              <Typography fontFamily={'BBCReithSans_W_Md'} fontSize={'2rem'}>{seriesEpisode}</Typography>
-            </Fade>
+          <Box sx={{paddingLeft: '10px', paddingRight: '10px'}}>
+            <Typography dir='auto' fontFamily={'BBCReithQalam_W_Rg'} fontSize={'28px'}>{eventTime}</Typography>
           </Box>
         </Box>
       </TextTransition>
@@ -267,6 +284,7 @@ function NowNext({ headline, styling }) {
 }
 
 function Bottom({ params }) {
+  const feed = params.feed || config.app.feed;
   const styling = params.styling || 'grownup';
 
   const [on, setOn] = useState(false);
@@ -293,7 +311,7 @@ function Bottom({ params }) {
         console.log(sOfm);
 
         let news = [];
-        const url = "https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + config.app.feed + "&mixins=summary,thumbnail_images";
+        const url = "https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + feed + "&mixins=summary,thumbnail_images";
         let Data = "";
 
         fetch(url)
@@ -357,16 +375,10 @@ function Bottom({ params }) {
         onEntered={() => console.log('entered')}
         addEndListener={() => setSteady(FALSE)}
         timeout={500}>
-        <Box sx={styling === 'grownup' ?
-          {
-            height: '710px', width: '600px', color: 'white',
-            background: 'rgba(187, 24, 25, 0.6)',
-            display: 'grid', gridTemplateColumns: '1fr'
-          }
-          : {
-            height: '710px', width: '600px', color: 'black',
-            background: 'linear-gradient(to right, rgba(255, 255, 255, .9), rgba(255, 255, 255, .9))',
-            display: 'grid', gridTemplateColumns: '1fr'
+        <Box sx={{
+            height: '652px', width: '740px', color: 'white',
+            background: 'black',
+            display: 'grid', gridTemplateColumns: '1fr', borderRadius: '10px', overflow: 'hidden'
           }}>
           <Box display='flex' alignItems='center'>
             <NowNext headline={headline} styling={styling} />
@@ -377,7 +389,13 @@ function Bottom({ params }) {
   );
 }
 
-function TopLeft({ show }) {
+function TopRight({ params }) {
+  const lang = params.language || "pashto";
+  daysOfWeek = config[lang].day;
+  months = config[lang].month;
+  numbers = config[lang].numbers;
+  connectors = config[lang].connectors;
+  console.log(params.language);
   const [on, setOn] = useState(false);
   const [TimeDateString, setTimeDate] = useState();
   let eventTime;
@@ -394,7 +412,11 @@ function TopLeft({ show }) {
         }
         console.log(on);
         let TimeDate = new Date();
-        let TimeDateString = ("0" + TimeDate.getHours()).slice(-2) + ":" + ("0" + TimeDate.getMinutes()).slice(-2) + " - " + daysOfWeek[TimeDate.getDay()] + " " + TimeDate.getDate() + " " + months[TimeDate.getMonth()] + " " + TimeDate.getFullYear();
+        let Hours = Translate((("0" + TimeDate.getHours()).slice(-2)), numbers);
+        let Minutes = Translate((("0" + TimeDate.getMinutes()).slice(-2)), numbers);
+        let TodayDate = Translate(TimeDate.getDate(), numbers)
+        let Year = Translate(TimeDate.getFullYear(), numbers)
+        let TimeDateString = Hours + ":" + Minutes + " - " + daysOfWeek[TimeDate.getDay()] + " " + TodayDate + " " + months[TimeDate.getMonth()] + " " + Year;
         setTimeDate(TimeDateString); 
       })();
       }, 5000);
@@ -402,13 +424,20 @@ function TopLeft({ show }) {
   });
   return (
     <Box>
-      <Typography fontFamily={'BBCReithSans_W_Bd'} fontSize={'2.2rem'}>{TimeDateString}</Typography>
+      <Typography dir='rtl' fontFamily={'BBCReithQalam_W_Bd'} fontSize={'26px'}>{TimeDateString}</Typography>
+      <Typography dir='rtl' fontFamily={'BBCReithQalam_W_Bd'} fontSize={'26px'}>{config[lang].heading}</Typography>
     </Box>
   );
 }
 
-function TopRight({ show }) {
-  return <img alt='BBC News' src={BBCNews}/>;
+function TopLeft({region}) {
+  let icon = '';
+  if (region === 'en'){
+    icon = BBCNews2;
+  } else {
+    icon = BBCNews;
+  }
+  return <img alt='BBC News' height='68px' src={icon}/>;
 }
 
 /*
@@ -419,19 +448,17 @@ export default function App(params) {
     <Paper>
       <Box sx={{
         width: 'auto', height: '100vh',
-        display: 'grid', gridTemplateRows: '110px 150px 710px'
+        display: 'grid', gridTemplateRows: '110px 134px 659px'
       }}>
         <Box>
           <video className='videoTag' autoPlay loop width='1920'
             height='1080'muted>
-            <source src={sample} type='video/webm'/>
+            <source src={sample} type='video/mp4'/>
           </video>
         </Box>
-        <Box sx={{ display: 'grid', width: '1700px', gridTemplateColumns: '1fr 1fr 1fr', gridTemplateRows: '1fr 1fr',  marginTop: '0px', marginLeft: '110px', marginRight: '110px'}}>
-          <TopLeft show={params.tl}/>
-          <Box></Box>
-          <Box sx={{ display: 'block', marginLeft: 'auto' }}><TopRight show={params.tr} /></Box>
-          <Box><Typography fontFamily={'BBCReithSans_W_Md'} fontSize={'2.2rem'}>BBC World Service Radio Vision - Afghan</Typography></Box>
+        <Box sx={{ display: 'grid', width: '1700px', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr',  marginTop: '0px', marginLeft: '110px', marginRight: '110px'}}>
+          <Box sx={{ display: 'block', marginTop: '13px' }}><TopLeft region={params.region}/></Box>
+          <Box sx={{ display: 'block', marginTop: '14px' }}><TopRight params={params} /></Box>
           <Box></Box>
           <Box></Box>
         </Box>

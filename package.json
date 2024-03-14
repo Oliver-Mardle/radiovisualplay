@@ -11,6 +11,7 @@
     "cors": "^2.8.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-native-linear-gradient": "^2.8.3",
     "react-scale-text": "^1.2.2",
     "react-scripts": "5.0.1",
     "react-sequence-animator": "^2.3.0",
