@@ -395,6 +395,7 @@ function TopRight({ params }) {
   months = config[lang].month;
   numbers = config[lang].numbers;
   connectors = config[lang].connectors;
+  let showFullTime = params.fullTime || false;
   console.log(params.language);
   const [on, setOn] = useState(false);
   const [TimeDateString, setTimeDate] = useState();
@@ -416,8 +417,13 @@ function TopRight({ params }) {
         let Minutes = Translate((("0" + TimeDate.getMinutes()).slice(-2)), numbers);
         let TodayDate = Translate(TimeDate.getDate(), numbers)
         let Year = Translate(TimeDate.getFullYear(), numbers)
-        let TimeDateString = Hours + ":" + Minutes + " - " + daysOfWeek[TimeDate.getDay()] + " " + TodayDate + " " + months[TimeDate.getMonth()] + " " + Year;
-        setTimeDate(TimeDateString); 
+        if (showFullTime === true) {
+          let TimeDateStr = Hours + ":" + Minutes + " - " + daysOfWeek[TimeDate.getDay()] + " " + TodayDate + " " + months[TimeDate.getMonth()] + " " + Year;
+          setTimeDate(TimeDateStr); 
+        } else {
+          let TimeDateStr = Hours + ":" + Minutes + " - " + daysOfWeek[TimeDate.getDay()];
+          setTimeDate(TimeDateStr); 
+        }
       })();
       }, 5000);
     return () => clearInterval(interval);
