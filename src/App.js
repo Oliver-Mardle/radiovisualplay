@@ -6,7 +6,8 @@ import Typography from '@mui/material/Typography';
 import BBCNews from './BBC_News_Afghanistan.png'
 import BBCNews2 from './BBC_News_EN.png'
 import schedule_default from './schedules_holding_image.jpg'
-import sample from  './ReithLoop1min.mp4';
+//import sample from  './ReithLoop1min.mp4';
+import sample from  './ReithBackingLoop.webm';
 import defaultImg from './default.png';
 import TextTransition, { presets } from 'react-text-transition';
 
@@ -17,10 +18,12 @@ let counter2 = 0;
 var scheduleItemCount = 0;
 var downloadSchedule = true;
 let schedule = [];
+var lang = "";
 var daysOfWeek = "";
 var months = "";
 var numbers = "";
 var connectors = "";
+var published = "";
 
 function Translate( num, charSet ) {
   const number = num;
@@ -33,24 +36,77 @@ function Translate( num, charSet ) {
   return newNumber;
 }
 
+function calculateTimePassed( dateAndTime ) {
+  let eventTime = Date.parse(dateAndTime);
+  let TimeDate = new Date();
+  let TimePassed = Math.round((TimeDate - eventTime) / 60000);
+  let TimePassedString = "";
+
+  console.log("Event Time: " + eventTime);
+  console.log("Current Time: " + TimeDate);
+  if (TimePassed > 59) {
+    TimePassed = Math.round(TimePassed / 60);
+    if (TimePassed > 24){
+      TimePassed = Math.round(TimePassed / 24);
+      if (TimePassed === 1){
+        console.log("Published " + TimePassed + " Day Ago");
+        TimePassedString = published[4].replace("XX", Translate(TimePassed, numbers));
+        //TimePassedString = "Published " + TimePassed + " Day Ago";
+      } else {
+        console.log("Published " + TimePassed + " Days Ago");
+        TimePassedString = published[5].replace("XX", Translate(TimePassed, numbers));
+        //TimePassedString = "Published " + TimePassed + " Days Ago";
+      }
+    } else {
+      if (TimePassed === 1){
+        console.log("Published " + TimePassed + " Hour Ago");
+        TimePassedString = published[2].replace("XX", Translate(TimePassed, numbers));
+        //TimePassedString = "Published " + TimePassed + " Hour Ago";
+      } else {
+        console.log("Published " + TimePassed + " Hours Ago");
+        TimePassedString = published[3].replace("XX", Translate(TimePassed, numbers));
+        //TimePassedString = "Published " + TimePassed + " Hours Ago";
+      }
+    }
+  } else {
+    if (TimePassed === 1){
+      console.log("Published " + TimePassed + " Minute Ago");
+      TimePassedString = published[0].replace("XX", Translate(TimePassed, numbers));
+      //TimePassedString = "Published " + TimePassed + " Minute Ago";
+    } else {
+      console.log("Published " + TimePassed + " Minutes Ago");
+      TimePassedString = published[1].replace("XX", Translate(TimePassed, numbers));
+      //TimePassedString = "Published " + TimePassed + " Minutes Ago";
+    }
+  }
+  return TimePassedString;
+}
+
 function NowNextSchedule({now, next, later}) {
   let nowTitle;
+  let nowBrand;
   let nowSynopsis;
   let nowStart;
   let nowImage;
+  let nowDay;
 
   let nextTitle;
+  let nextBrand;
   let nextSynopsis;
   let nextStart;
   let nextImage;
+  let nextDay;
 
   let laterTitle;
+  let laterBrand;
   let laterSynopsis;
   let laterStart;
   let laterImage;
+  let laterDay;
 
   try {
     nowTitle = now.title;
+    nowBrand = now.brand;
     nowSynopsis = now.synopsis;
     if (nowSynopsis != null) {
       nowSynopsis = nowSynopsis.short;
@@ -59,8 +115,13 @@ function NowNextSchedule({now, next, later}) {
     let nowTime = nowDateTime[1].split(":");
     let nowHours = Translate(nowTime[0], numbers);
     let nowMinutes = Translate(nowTime[1], numbers);
-    let nowDay = daysOfWeek[new Date(nowDateTime[0]).getDay()];
-    nowStart = nowDay + " " + connectors[1] + " " + nowHours + ":" + nowMinutes + " " + connectors[0];
+    try {
+      let days = config[lang][nowBrand];
+      nowDay = days[new Date(nowDateTime[0]).getDay()];
+    } catch {
+      nowDay = daysOfWeek[new Date(nowDateTime[0]).getDay()];
+    }
+    nowStart = nowDay + " " + connectors[1] + " " + nowHours + ":" + nowMinutes + " " + connectors[0] + " " + nowBrand;
     if (now.thumbnail !== 'NO IMAGE') {
       nowImage = now.thumbnail;
     } else {
@@ -73,6 +134,7 @@ function NowNextSchedule({now, next, later}) {
 
   try {
     nextTitle = next.title;
+    nextBrand = next.brand;
     nextSynopsis = next.synopsis;
     if (nextSynopsis != null) {
       nextSynopsis = nextSynopsis.short;
@@ -81,8 +143,13 @@ function NowNextSchedule({now, next, later}) {
     let nextTime = nextDateTime[1].split(":");
     let nextHours = Translate(nextTime[0], numbers);
     let nextMinutes = Translate(nextTime[1], numbers);
-    let nextDay = daysOfWeek[new Date(nextDateTime[0]).getDay()];
-    nextStart = nextDay + " " + connectors[1] + " " + nextHours + ":" + nextMinutes + " " + connectors[0];
+    try {
+      let days = config[lang][nextBrand];
+      nextDay = days[new Date(nextDateTime[0]).getDay()];
+    } catch {
+      nextDay = daysOfWeek[new Date(nextDateTime[0]).getDay()];
+    }
+    nextStart = nextDay + " " + connectors[1] + " " + nextHours + ":" + nextMinutes + " " + connectors[0] + " " + nextBrand;
     if (next.thumbnail !== 'NO IMAGE') {
       nextImage = next.thumbnail;
     } else {
@@ -95,6 +162,7 @@ function NowNextSchedule({now, next, later}) {
 
   try {
     laterTitle = later.title;
+    laterBrand = later.brand;
     laterSynopsis = later.synopsis;
     if (laterSynopsis != null) {
       laterSynopsis = laterSynopsis.short;
@@ -103,8 +171,13 @@ function NowNextSchedule({now, next, later}) {
     let laterTime = laterDateTime[1].split(":");
     let laterHours = Translate(laterTime[0], numbers);
     let laterMinutes = Translate(laterTime[1], numbers);
-    let laterDay = daysOfWeek[new Date(laterDateTime[0]).getDay()];
-    laterStart = laterDay + " " + connectors[1] + " " + laterHours + ":" + laterMinutes + " " + connectors[0];
+    try {
+      let days = config[lang][laterBrand];
+      laterDay = days[new Date(laterDateTime[0]).getDay()];
+    } catch {
+      laterDay = daysOfWeek[new Date(laterDateTime[0]).getDay()];
+    }
+    laterStart = laterDay + " " + connectors[1] + " " + laterHours + ":" + laterMinutes + " " + connectors[0] + " " + laterBrand;
     if (later.thumbnail !== 'NO IMAGE') {
       laterImage = later.thumbnail;
     } else {
@@ -187,6 +260,7 @@ function ScheduleSection({ params }) {
           schedule = [];
           for (let i = 0; i < items.length; i++) {
             let title = items[i]["brand"]["title"];
+            let brand = items[i]["brand"]["master_brand"].replace("bbc_", "").replace("_tv", "");
             let episode = items[i]["episode"]["title"];
             let synopsis = items[i]["episode"]["synopsis"];
             let start = items[i]["broadcast"]["published_time"]["attr"]["start"];
@@ -198,7 +272,7 @@ function ScheduleSection({ params }) {
               thumbnail = "NO IMAGE"
             }
 
-            let programme = {'title': title, 'episode': episode, 'synopsis': synopsis, 'start': start, 'duration': duration, 'thumbnail': thumbnail};
+            let programme = {'title': title, 'brand': brand, 'episode': episode, 'synopsis': synopsis, 'start': start, 'duration': duration, 'thumbnail': thumbnail};
             schedule.push(programme);
           }
           downloadSchedule = false;
@@ -242,7 +316,7 @@ function NowNext({ headline, styling }) {
   try{
     brand = headline.headline;
     //seriesEpisode = headline.description;
-    eventTime = headline.date;
+    eventTime = calculateTimePassed(headline.date);
     if (headline.image === false) {
       picture = defaultImg;
     } else {
@@ -252,14 +326,6 @@ function NowNext({ headline, styling }) {
   } catch {
     console.log("No Data Yet")
   }
-
-  /*
-      <Box>
-        <Fade in={true} timeout={500}>
-          <Typography fontFamily={'BBCReithSans_W_Md'} fontSize={'1.5rem'} paddingLeft={'10px'} paddingBottom={'5px'}>Published: {eventTime}</Typography>
-        </Fade>
-      </Box>
-  */
 
   return (
     <Box sx={{
@@ -390,11 +456,12 @@ function Bottom({ params }) {
 }
 
 function TopRight({ params }) {
-  const lang = params.language || "pashto";
+  lang = params.language || "pashto";
   daysOfWeek = config[lang].day;
   months = config[lang].month;
   numbers = config[lang].numbers;
   connectors = config[lang].connectors;
+  published = config[lang].published;
   let showFullTime = params.fullTime || false;
   console.log(params.language);
   const [on, setOn] = useState(false);
@@ -459,7 +526,7 @@ export default function App(params) {
         <Box>
           <video className='videoTag' autoPlay loop width='1920'
             height='1080'muted>
-            <source src={sample} type='video/mp4'/>
+            <source src={sample} type='video/webm'/>
           </video>
         </Box>
         <Box sx={{ display: 'grid', width: '1700px', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr',  marginTop: '0px', marginLeft: '110px', marginRight: '110px'}}>
