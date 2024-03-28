@@ -10,6 +10,7 @@ import schedule_default from './schedules_holding_image.jpg'
 import sample from  './ReithBackingLoop.webm';
 import defaultImg from './default.png';
 import TextTransition, { presets } from 'react-text-transition';
+//import ScaleText from 'react-scale-text';
 
 const config = require('./config');
 
@@ -193,8 +194,8 @@ function NowNextSchedule({now, next, later}) {
       <Box sx={{display: 'grid', gridTemplateColumns: '583px 327px', height: '184px', width: '910px', color: 'black', background: "#EBEBEB", marginBottom: "50px", borderRadius: '10px', overflow: 'hidden'}}>
         <TextTransition springConfig={presets.stiff}>
           <Box sx={{height: '154px', width: '583px'}}>
-            <Typography dir='auto' color='red' marginLeft={'10px'} marginRight={'10px'} fontFamily={'BBCReithQalam_W_Bd'} fontSize={'42px'}>{nowTitle}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'24px'}>{nowSynopsis}</Typography>
+            <Typography dir='auto' color='red' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'42px'}>{nowTitle}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'24px'}>{nowSynopsis}</Typography>        
           </Box>
           <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Rg'} fontSize={'20px'}>{nowStart}</Typography>
         </TextTransition>
