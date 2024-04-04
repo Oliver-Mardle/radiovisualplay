@@ -10,7 +10,6 @@ import schedule_default from './schedules_holding_image.jpg'
 import sample from  './ReithBackingLoop.webm';
 import defaultImg from './default.png';
 import TextTransition, { presets } from 'react-text-transition';
-//import ScaleText from 'react-scale-text';
 
 const config = require('./config');
 
@@ -43,184 +42,109 @@ function calculateTimePassed( dateAndTime ) {
   let TimePassed = Math.round((TimeDate - eventTime) / 60000);
   let TimePassedString = "";
 
-  console.log("Event Time: " + eventTime);
-  console.log("Current Time: " + TimeDate);
   if (TimePassed > 59) {
     TimePassed = Math.round(TimePassed / 60);
     if (TimePassed > 24){
       TimePassed = Math.round(TimePassed / 24);
       if (TimePassed === 1){
-        console.log("Published " + TimePassed + " Day Ago");
         TimePassedString = published[4].replace("XX", Translate(TimePassed, numbers));
-        //TimePassedString = "Published " + TimePassed + " Day Ago";
       } else {
-        console.log("Published " + TimePassed + " Days Ago");
         TimePassedString = published[5].replace("XX", Translate(TimePassed, numbers));
-        //TimePassedString = "Published " + TimePassed + " Days Ago";
       }
     } else {
       if (TimePassed === 1){
-        console.log("Published " + TimePassed + " Hour Ago");
         TimePassedString = published[2].replace("XX", Translate(TimePassed, numbers));
-        //TimePassedString = "Published " + TimePassed + " Hour Ago";
       } else {
-        console.log("Published " + TimePassed + " Hours Ago");
         TimePassedString = published[3].replace("XX", Translate(TimePassed, numbers));
-        //TimePassedString = "Published " + TimePassed + " Hours Ago";
       }
     }
   } else {
     if (TimePassed === 1){
-      console.log("Published " + TimePassed + " Minute Ago");
       TimePassedString = published[0].replace("XX", Translate(TimePassed, numbers));
-      //TimePassedString = "Published " + TimePassed + " Minute Ago";
     } else {
-      console.log("Published " + TimePassed + " Minutes Ago");
       TimePassedString = published[1].replace("XX", Translate(TimePassed, numbers));
-      //TimePassedString = "Published " + TimePassed + " Minutes Ago";
     }
   }
   return TimePassedString;
 }
 
-function NowNextSchedule({now, next, later}) {
-  let nowTitle;
-  let nowBrand;
-  let nowSynopsis;
-  let nowStart;
-  let nowImage;
-  let nowDay;
-
-  let nextTitle;
-  let nextBrand;
-  let nextSynopsis;
-  let nextStart;
-  let nextImage;
-  let nextDay;
-
-  let laterTitle;
-  let laterBrand;
-  let laterSynopsis;
-  let laterStart;
-  let laterImage;
-  let laterDay;
-
-  try {
-    nowTitle = now.title;
-    nowBrand = now.brand;
-    nowSynopsis = now.synopsis;
-    if (nowSynopsis != null) {
-      nowSynopsis = nowSynopsis.short;
-    }
-    let nowDateTime = (now.start.replace("Z", "")).split("T");
-    let nowTime = nowDateTime[1].split(":");
-    let nowHours = Translate(nowTime[0], numbers);
-    let nowMinutes = Translate(nowTime[1], numbers);
-    try {
-      let days = config[lang][nowBrand];
-      nowDay = days[new Date(nowDateTime[0]).getDay()];
-    } catch {
-      nowDay = daysOfWeek[new Date(nowDateTime[0]).getDay()];
-    }
-    nowStart = nowDay + " " + connectors[1] + " " + nowHours + ":" + nowMinutes + " " + connectors[0] + " " + nowBrand;
-    if (now.thumbnail !== 'NO IMAGE') {
-      nowImage = now.thumbnail;
-    } else {
-      nowImage = schedule_default;
-    }
-    
-  } catch {
-    console.log("No Now Schedule Data");
+function resizeFonts ({lengthBeforeCut, maxSize, length, cutPerCharacter}) {
+  let fontSize;
+  let overflow;
+  if (length <= lengthBeforeCut) {
+    fontSize = maxSize;
+  } else {
+    overflow = length - lengthBeforeCut;
+    fontSize = maxSize - ((overflow / 10) * cutPerCharacter);
   }
+  return (fontSize)
+}
+
+function BuildScheduleBox({scheduleData}) {
+  let title;
+  let brand;
+  let synopsis;
+  let start;
+  let image;
+  let day;
+  let titleSize = 42;
+  let synopsisSize = 24;
 
   try {
-    nextTitle = next.title;
-    nextBrand = next.brand;
-    nextSynopsis = next.synopsis;
-    if (nextSynopsis != null) {
-      nextSynopsis = nextSynopsis.short;
+    title = scheduleData.title;
+    brand = scheduleData.brand;
+    synopsis = scheduleData.synopsis;
+    if (synopsis != null) {
+      synopsis = synopsis.short;
     }
-    let nextDateTime = (next.start.replace("Z", "")).split("T");
-    let nextTime = nextDateTime[1].split(":");
-    let nextHours = Translate(nextTime[0], numbers);
-    let nextMinutes = Translate(nextTime[1], numbers);
+    let dateTime = (scheduleData.start.replace("Z", "")).split("T");
+    let time = dateTime[1].split(":");
+    let hours = Translate(time[0], numbers);
+    let minutes = Translate(time[1], numbers);
     try {
-      let days = config[lang][nextBrand];
-      nextDay = days[new Date(nextDateTime[0]).getDay()];
+      let days = config[lang][brand];
+      day = days[new Date(dateTime[0]).getDay()];
     } catch {
-      nextDay = daysOfWeek[new Date(nextDateTime[0]).getDay()];
+      day = daysOfWeek[new Date(dateTime[0]).getDay()];
     }
-    nextStart = nextDay + " " + connectors[1] + " " + nextHours + ":" + nextMinutes + " " + connectors[0] + " " + nextBrand;
-    if (next.thumbnail !== 'NO IMAGE') {
-      nextImage = next.thumbnail;
+    start = day + " " + connectors[1] + " " + hours + ":" + minutes + " " + connectors[0] + " " + brand;
+    if (scheduleData.thumbnail !== 'NO IMAGE') {
+      image = scheduleData.thumbnail;
     } else {
-      nextImage = schedule_default;
+      image = schedule_default;
     }
+    titleSize = resizeFonts ({
+      lengthBeforeCut: 20,
+      maxSize: titleSize,
+      length: title.length,
+      cutPerCharacter: 7
+    }) + 'px';
+
+    synopsisSize = resizeFonts ({
+      lengthBeforeCut: 100,
+      maxSize: synopsisSize,
+      length: synopsis.length,
+      cutPerCharacter: 3.5
+    }) + 'px';
 
   } catch {
-    console.log("No Next Schedule Data");
-  }
-
-  try {
-    laterTitle = later.title;
-    laterBrand = later.brand;
-    laterSynopsis = later.synopsis;
-    if (laterSynopsis != null) {
-      laterSynopsis = laterSynopsis.short;
-    }
-    let laterDateTime = (later.start.replace("Z", "")).split("T");
-    let laterTime = laterDateTime[1].split(":");
-    let laterHours = Translate(laterTime[0], numbers);
-    let laterMinutes = Translate(laterTime[1], numbers);
-    try {
-      let days = config[lang][laterBrand];
-      laterDay = days[new Date(laterDateTime[0]).getDay()];
-    } catch {
-      laterDay = daysOfWeek[new Date(laterDateTime[0]).getDay()];
-    }
-    laterStart = laterDay + " " + connectors[1] + " " + laterHours + ":" + laterMinutes + " " + connectors[0] + " " + laterBrand;
-    if (later.thumbnail !== 'NO IMAGE') {
-      laterImage = later.thumbnail;
-    } else {
-      laterImage = schedule_default;
-    }
-
-  } catch {
-    console.log("No Later Schedule Data");
+    console.log("No Schedule Data");
   }
 
   return (
-    <Box sx={{ display: 'grid', fontFamily: 'BBCReithSans_W_Md', width: '910pxpx', gridTemplateRows: '1fr 1fr 1fr',  marginTop: '0px', marginRight: '50px'}}>
-      <Box sx={{display: 'grid', gridTemplateColumns: '583px 327px', height: '184px', width: '910px', color: 'black', background: "#EBEBEB", marginBottom: "50px", borderRadius: '10px', overflow: 'hidden'}}>
+    <Box sx={{display: 'grid', gridTemplateColumns: '583px 327px', height: '184px', width: '910px', color: 'black', background: "#EBEBEB", marginBottom: "50px", borderRadius: '10px', overflow: 'hidden'}}>
         <TextTransition springConfig={presets.stiff}>
-          <Box sx={{height: '154px', width: '583px'}}>
-            <Typography dir='auto' color='red' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'42px'}>{nowTitle}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'24px'}>{nowSynopsis}</Typography>        
+          <Box sx={{display: 'grid', gridTemplateRows: '67px 87px 30px', height: '184px', width: '583px'}}>
+          <Box sx={{height: '67px', width: '583px'}}>
+            <Typography style={{fontSize: titleSize}} id='name' dir='auto' color='red' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'}>{title}</Typography>
           </Box>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Rg'} fontSize={'20px'}>{nowStart}</Typography>
-        </TextTransition>
-        <TextTransition springConfig={presets.stiff}><img alt="" src={nowImage} height='184' borderRadius='10px'/></TextTransition>  
-      </Box>
-      <Box sx={{display: 'grid', gridTemplateColumns: '583px 327px', height: '184px', width: '910px', color: 'black', background: "#EBEBEB", marginBottom: "50px", borderRadius: '10px', overflow: 'hidden'}}>
-        <TextTransition springConfig={presets.stiff}>
-          <Box sx={{height: '154px', width: '583px'}}>
-            <Typography dir='auto' color='red' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'42px'}>{nextTitle}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'24px'}>{nextSynopsis}</Typography>
+          <Box sx={{height: '87px', width: '583px'}}>
+            <Typography style={{fontSize: synopsisSize}} id='synopsis' dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'}>{synopsis}</Typography>
           </Box>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Rg'} fontSize={'20px'}>{nextStart}</Typography>
-        </TextTransition>
-        <TextTransition springConfig={presets.stiff}><img alt="" src={nextImage} height='184px' borderRadius='10px'/></TextTransition>
-      </Box>
-      <Box sx={{display: 'grid', gridTemplateColumns: '583px 327px', height: '184px', width: '910px', color: 'black', background: "#EBEBEB", borderRadius: '10px', overflow: 'hidden'}}>
-        <TextTransition springConfig={presets.stiff}>
-          <Box sx={{height: '154px', width: '583px'}}>
-            <Typography dir='auto' color='red' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'42px'}>{laterTitle}</Typography>
-            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Bd'} fontSize={'24px'}>{laterSynopsis}</Typography>
+            <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Rg'} fontSize={'20px'}>{start}</Typography>
           </Box>
-          <Typography dir='auto' marginLeft={'10px'} marginRight={'10px'}fontFamily={'BBCReithQalam_W_Rg'} fontSize={'20px'}>{laterStart}</Typography>
         </TextTransition>
-        <TextTransition springConfig={presets.stiff}><img alt="" src={laterImage} height='184px' borderRadius='10px'/></TextTransition>
-      </Box>
+      <TextTransition springConfig={presets.stiff}><img alt="" src={image} height='184' borderRadius='10px'/></TextTransition>  
     </Box>
   )
 }
@@ -297,18 +221,20 @@ function ScheduleSection({ params }) {
           console.log(error);
           console.log("No Schedule Has Been Downloaded Yet");
         }
-            
       })();
     }, 10000);
     return () => clearInterval(interval);
   });
-
   return (
-    <NowNextSchedule now={now} next={next} later={later}/>
+    <Box sx={{ display: 'grid', fontFamily: 'BBCReithSans_W_Md', width: '910pxpx', gridTemplateRows: '1fr 1fr 1fr',  marginTop: '0px', marginRight: '50px'}}>
+      <BuildScheduleBox scheduleData={now} />
+      <BuildScheduleBox scheduleData={next} />
+      <BuildScheduleBox scheduleData={later} />
+    </Box>
   );
 }
 
-function NowNext({ headline, styling }) {
+function News({ headline, styling }) {
   let brand;
   //let seriesEpisode;
   let eventTime;
@@ -350,7 +276,7 @@ function NowNext({ headline, styling }) {
   );
 }
 
-function Bottom({ params }) {
+function NewsHeadlines({ params }) {
   const feed = params.feed || config.app.feed;
   const styling = params.styling || 'grownup';
 
@@ -448,7 +374,7 @@ function Bottom({ params }) {
             display: 'grid', gridTemplateColumns: '1fr', borderRadius: '10px', overflow: 'hidden'
           }}>
           <Box display='flex' alignItems='center'>
-            <NowNext headline={headline} styling={styling} />
+            <News headline={headline} styling={styling} />
           </Box>
         </Box>
       </Slide>
@@ -493,7 +419,7 @@ function TopRight({ params }) {
           setTimeDate(TimeDateStr); 
         }
       })();
-      }, 5000);
+      }, 500);
     return () => clearInterval(interval);
   });
   return (
@@ -538,7 +464,7 @@ export default function App(params) {
         </Box>
         <Box sx={{ display: 'grid', width: '1700px', gridTemplateColumns: '1fr 1fr',  marginTop: '0px', marginLeft: '110px', marginRight: '110px'}}>
           <ScheduleSection params={params} />
-          <Bottom params={params} />
+          <NewsHeadlines params={params} />
         </Box>
       </Box>
     </Paper>

@@ -5,6 +5,17 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.name {
+  direction: 'auto';
+  color: rgb(255, 0, 0);;
+  margin-left: '10px';
+  margin-right: '10px';
+  font-family: 'BBCReithQalam_W_Bd';
+  font-size: '42px';
+  height: '67px';
+  width: '583px'
+}
+
 body {
   color: rgb(0, 0, 0);
   background-color: rgba(0,0,0,0);
