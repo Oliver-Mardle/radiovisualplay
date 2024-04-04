@@ -107,7 +107,12 @@ function BuildScheduleBox({scheduleData}) {
     } catch {
       day = daysOfWeek[new Date(dateTime[0]).getDay()];
     }
-    start = day + " " + connectors[1] + " " + hours + ":" + minutes + " " + connectors[0] + " " + brand;
+    try {
+      start = day + " " + config[lang][brand+"connectors"][1] + " " + hours + ":" + minutes + " " + config[lang][brand+"connectors"][0] + " " + brand;
+    } catch {
+      start = day + " " + connectors[1] + " " + hours + ":" + minutes + " " + connectors[0] + " " + brand;
+    }
+    
     if (scheduleData.thumbnail !== 'NO IMAGE') {
       image = scheduleData.thumbnail;
     } else {
