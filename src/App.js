@@ -108,9 +108,9 @@ function BuildScheduleBox({scheduleData}) {
       day = daysOfWeek[new Date(dateTime[0]).getDay()];
     }
     try {
-      start = day + " " + config[lang][brand+"connectors"][1] + " " + hours + ":" + minutes + " " + config[lang][brand+"connectors"][0] + " " + brand;
+      start = day + " " + config[lang][brand+"connectors"][1] + " " + hours + ":" + minutes + " " + config[lang][brand+"connectors"][0];
     } catch {
-      start = day + " " + connectors[1] + " " + hours + ":" + minutes + " " + connectors[0] + " " + brand;
+      start = day + " " + connectors[1] + " " + hours + ":" + minutes + " " + connectors[0];
     }
     
     if (scheduleData.thumbnail !== 'NO IMAGE') {
