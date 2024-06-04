@@ -2,9 +2,9 @@ const config = {
     app: {
         sid: 'bbc_afghan_tv',
         feed: 'pashto-front-page',
-        schedulesKey: 'zRS5WtBPR6djXlWDOgkk4B0yHncsMeJ0',
-        schedulesKey2: '2539lpzfXw9B3Vosnpcd4hI9RnFV7f0v',
-        headlinesKey: 'NDmFB0HOF7oBoq6gj7KfGiaQLW7ccoYp'
+        schedulesKey: 'X',
+        schedulesKey2: 'X',
+        headlinesKey: 'X'
     },
     english: {
         day: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
