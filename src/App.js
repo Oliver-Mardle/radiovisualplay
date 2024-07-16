@@ -204,7 +204,7 @@ function ScheduleSection({ params }) {
             let pid = items[i]["episode"]["pid"];
             let language = ""
             
-            const r3 = await fetch("https://ws-syndication.api.bbci.co.uk/api/episodes?pid=" + pid + "&page_size=100&api-key=zRS5WtBPR6djXlWDOgkk4B0yHncsMeJ0");
+            const r3 = await fetch("https://ws-syndication.api.bbci.co.uk/api/episodes?pid=" + pid + "&page_size=100&api-key=" + config.app.schedulesKey);
             if (r3.ok) {
             const data3 = await r3.json();
             language = data3["ws_syndication"]["results"]["items"][0]["language"];
