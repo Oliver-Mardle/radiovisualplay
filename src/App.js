@@ -16,14 +16,16 @@ const config = require('./config');
 let counter = 0;
 let counter2 = 0;
 var scheduleItemCount = 0;
+var newsItemCount = 0;
 var downloadSchedule = true;
+var downloadNews = true;
 let schedule = [];
+let allStories = [];
 var lang = "";
 var daysOfWeek = "";
 var months = "";
 var numbers = "";
 var connectors = "";
-var published = "";
 
 function Translate( num, charSet ) {
   const number = num;
@@ -36,7 +38,7 @@ function Translate( num, charSet ) {
   return newNumber;
 }
 
-function calculateTimePassed( dateAndTime ) {
+function calculateTimePassed( dateAndTime, published ) {
   let eventTime = Date.parse(dateAndTime);
   let TimeDate = new Date();
   let TimePassed = Math.round((TimeDate - eventTime) / 60000);
@@ -89,6 +91,7 @@ function BuildScheduleBox({scheduleData}) {
   let day;
   let titleSize = 42;
   let synopsisSize = 24;
+  let pid;
 
   try {
     title = scheduleData.title;
@@ -97,6 +100,8 @@ function BuildScheduleBox({scheduleData}) {
     if (synopsis != null) {
       synopsis = synopsis.short;
     }
+    pid = scheduleData.pid;
+    console.log(pid);
     let dateTime = (scheduleData.start.replace("Z", "")).split("T");
     let time = dateTime[1].split(":");
     let hours = Translate(time[0], numbers);
@@ -108,9 +113,9 @@ function BuildScheduleBox({scheduleData}) {
       day = daysOfWeek[new Date(dateTime[0]).getDay()];
     }
     try {
-      start = day + " " + config[lang][brand+"connectors"][1] + " " + hours + ":" + minutes + " " + config[lang][brand+"connectors"][0];
+      start = day + " " + config[lang][brand+"connectors"][1] + " " + hours + ":" + minutes + " " + config[lang][brand+"connectors"][0]; // + " (" + pid + " - " + brand + ")";
     } catch {
-      start = day + " " + connectors[1] + " " + hours + ":" + minutes + " " + connectors[0];
+      start = day + " " + connectors[1] + " " + hours + ":" + minutes + " " + connectors[0]; // + " (" + pid + " - " + brand + ")";
     }
     
     if (scheduleData.thumbnail !== 'NO IMAGE') {
@@ -196,13 +201,23 @@ function ScheduleSection({ params }) {
             let start = items[i]["broadcast"]["published_time"]["attr"]["start"];
             let duration = items[i]["version"]["duration"];
             let thumbnail = items[i]["broadcast"]["image"]["attr"]["template_url"];
+            let pid = items[i]["episode"]["pid"];
+            let language = ""
+            
+            const r3 = await fetch("https://ws-syndication.api.bbci.co.uk/api/episodes?pid=" + pid + "&page_size=100&api-key=zRS5WtBPR6djXlWDOgkk4B0yHncsMeJ0");
+            if (r3.ok) {
+            const data3 = await r3.json();
+            language = data3["ws_syndication"]["results"]["items"][0]["language"];
+            brand = config["languageCodes"][language];
+            }
+
             try {
               thumbnail = thumbnail.replace("{recipe}", "960x540");
             } catch {
               thumbnail = "NO IMAGE"
             }
 
-            let programme = {'title': title, 'brand': brand, 'episode': episode, 'synopsis': synopsis, 'start': start, 'duration': duration, 'thumbnail': thumbnail};
+            let programme = {'title': title, 'brand': brand, 'episode': episode, 'synopsis': synopsis, 'start': start, 'duration': duration, 'thumbnail': thumbnail, 'pid': pid};
             schedule.push(programme);
           }
           downloadSchedule = false;
@@ -227,7 +242,7 @@ function ScheduleSection({ params }) {
           console.log("No Schedule Has Been Downloaded Yet");
         }
       })();
-    }, 10000);
+    }, 15000);
     return () => clearInterval(interval);
   });
   return (
@@ -240,23 +255,44 @@ function ScheduleSection({ params }) {
 }
 
 function News({ headline, styling }) {
-  let brand;
+  let newsHeadline;
   //let seriesEpisode;
   let eventTime;
   let picture;
+  let language;
+  let newsIndex;
+  let published;
+  published = config[lang]["published"];
+
+  // try {
+  //   language = config["languageCodes"][headline.languageCode];
+  //   published = config[lang][language+"published"];
+  // } catch {
+  //   console.log("No language set available - defaulting to " + lang);
+  // }
 
   try{
-    brand = headline.headline;
+    newsHeadline = headline.headline;
     //seriesEpisode = headline.description;
-    eventTime = calculateTimePassed(headline.date);
+    eventTime = calculateTimePassed(headline.date, published);
     if (headline.image === false) {
       picture = defaultImg;
     } else {
       picture = headline.image;
     }
+    newsIndex = headline.index;
+    console.log(newsIndex);
     
   } catch {
     console.log("No Data Yet")
+  }
+
+  try{
+    language = config["languageCodes"][headline.languageCode];
+    published = config[lang][language+"published"];
+    eventTime = calculateTimePassed(headline.date, published);
+  } catch {
+    console.log("No language translation available - using " + lang);
   }
 
   return (
@@ -270,7 +306,7 @@ function News({ headline, styling }) {
         }}>
           <Box></Box>
           <Box sx={{height: 'fit-content', paddingLeft: '10px', paddingRight: '10px'}}>
-            <Typography dir='auto' fontFamily={'BBCReithQalam_W_Rg'} fontSize={'48px'}>{brand}</Typography>
+            <Typography dir='auto' fontFamily={'BBCReithQalam_W_Rg'} fontSize={'48px'}>{newsHeadline}</Typography>
           </Box>
           <Box sx={{paddingLeft: '10px', paddingRight: '10px'}}>
             <Typography dir='auto' fontFamily={'BBCReithQalam_W_Rg'} fontSize={'28px'}>{eventTime}</Typography>
@@ -282,22 +318,25 @@ function News({ headline, styling }) {
 }
 
 function NewsHeadlines({ params }) {
+  let feeds = [];
   const feed = params.feed || config.app.feed;
-  const styling = params.styling || 'grownup';
 
-  const [on, setOn] = useState(false);
+  try{
+    feeds = feed.split(",");
+  } catch {
+    feeds.push(feed);
+  }
   const [headline, setHeadline] = useState();
-  const [steady, setSteady] = useState(false);
-  const containerRef = React.useRef(null);
   let eventTime;
 
+  const [on, setOn] = useState(false);
+  const [steady, setSteady] = useState(false);
+  const containerRef = React.useRef(null);
+  const styling = params.styling || 'grownup';
   const FALSE = true;
-  console.log(steady);
 
-  // 5 second timer
   useEffect(() => {
     let interval = null;
-    let newsItemCount = 0;
     interval = setInterval(() => {
       (async () => {
         const sOfm = (eventTime) ;
@@ -306,65 +345,75 @@ function NewsHeadlines({ params }) {
         } else {
           setOn(FALSE);
         }
-        console.log(sOfm);
+        console.log(on);
+        
+        if (downloadNews === true) {
+          allStories = []
+          const parser = new DOMParser();
+          for (let i = 0; i < feeds.length; i++) {
+            const r1 = await fetch("https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + feeds[i] + "&mixins=summary,thumbnail_images&sort=date_desc");
+            if (r1.ok) {
+              let newsItems = await r1.text();
+              newsItems = parser.parseFromString(newsItems, "text/xml");
+              let stories = newsItems.getElementsByTagName('item');
+              let headline = "";
+              let description = "";
+              let date = "";
+              let image = "";
+              let languageCode = "";
+              for (let i = 0; i < stories.length; i++) {
+                headline = (stories[i].childNodes[1].childNodes[0].nodeValue);
+                if (stories[i].childNodes[7].nodeName === 'description') {
+                  description = (stories[i].childNodes[7].childNodes[0].nodeValue);
+                  date = (stories[i].childNodes[9].childNodes[0].nodeValue);
+                } else {
+                  description = ("No Summary!");
+                  date = (stories[i].childNodes[7].childNodes[0].nodeValue);
+                }
 
-        let news = [];
-        const url = "https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + feed + "&mixins=summary,thumbnail_images";
-        let Data = "";
+                date = (stories[i].getElementsByTagName('pubDate')[0].childNodes[0].nodeValue)
+                headline = (stories[i].getElementsByTagName('title')[0].childNodes[0].nodeValue);
+                try{
+                  description= (stories[i].getElementsByTagName('description')[0].childNodes[0].nodeValue);
+                } catch {
+                  description = false;
+                }  
+                try{
+                  image = (stories[i].getElementsByTagName('media:thumbnail')[0].attributes[0].nodeValue);
+                } catch {
+                  image = false;
+                }
+                try{
+                  languageCode = newsItems.getElementsByTagName('language')[0].childNodes[0].nodeValue;
+                } catch {
+                  languageCode = false;
+                }
 
-        fetch(url)
-          .then((response) => response.text())
-          .then((RSSFeed) => {
-            Data = RSSFeed;
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(Data,"text/xml");
-
-            const item = xmlDoc.getElementsByTagName('item');
-            let headline = "";
-            let description = "";
-            let date = "";
-            let image = "";
-            newsItemCount = item.length;
-            for (let i = 0; i < item.length; i++) {
-              headline = (item[i].childNodes[1].childNodes[0].nodeValue);
-              if (item[i].childNodes[7].nodeName === 'description') {
-                description = (item[i].childNodes[7].childNodes[0].nodeValue);
-                date = (item[i].childNodes[9].childNodes[0].nodeValue);
-              } else {
-                description = ("No Summary!");
-                date = (item[i].childNodes[7].childNodes[0].nodeValue);
+                allStories.push({'headline': headline, 'description': description, 'date': date, 'image': image, 'languageCode': languageCode, 'index': i});
               }
-
-              date = (item[i].getElementsByTagName('pubDate')[0].childNodes[0].nodeValue)
-              headline = (item[i].getElementsByTagName('title')[0].childNodes[0].nodeValue);
-              try{
-                description = (item[i].getElementsByTagName('description')[0].childNodes[0].nodeValue);
-              } catch {
-                description = false;
-              }  
-              try{
-                image = (item[i].getElementsByTagName('media:thumbnail')[0].attributes[0].nodeValue);
-              } catch {
-                image = false;
-              }
-
-              news.push({'headline': headline, 'description': description, 'date': date, 'image': image});
             }
-            
-            if (counter === newsItemCount) {
-              counter = 0;
-            }
-
-            setHeadline(news[counter]);
-            counter = counter + 1;
-          });
+          }
+          downloadNews = false;
+          newsItemCount = allStories.length;
         }
-      )();
-    }, 10000);
+
+        if (counter === newsItemCount) {
+          console.log("Download new Stories!");
+          downloadNews = true;
+          counter = 0;          
+        }
+        try{
+          setHeadline(allStories[counter]);
+          counter = counter + 1;
+        } catch (error) {
+          console.log(error);
+          console.log("No News Has Been Downloaded Yet");
+        }
+      })();
+    }, 15000);
     return () => clearInterval(interval);
   });
 
-  console.log(`styling log ${styling}`);
   return (
     <Box sx={{ overflow: 'hidden' }} ref={containerRef}>
       <Slide direction="up"
@@ -393,7 +442,6 @@ function TopRight({ params }) {
   months = config[lang].month;
   numbers = config[lang].numbers;
   connectors = config[lang].connectors;
-  published = config[lang].published;
   let showFullTime = params.fullTime || false;
   console.log(params.language);
   const [on, setOn] = useState(false);

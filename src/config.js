@@ -2,9 +2,16 @@ const config = {
     app: {
         sid: 'bbc_afghan_tv',
         feed: 'pashto-front-page',
-        schedulesKey: 'X',
-        schedulesKey2: 'X',
-        headlinesKey: 'X'
+        schedulesKey: '',
+        schedulesKey2: '',
+        headlinesKey: ''
+    },
+    languageCodes: {
+        en: "english",
+        ps: "pashto",
+        uz: "uzbek",
+        dr: "dari",
+        fa: "farsi"
     },
     english: {
         day: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
@@ -20,11 +27,12 @@ const config = {
         uzbek: ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"],
         month: ["وری", "غویي", "غبرګولی", "چنګاښ", "زمری", "وږی", "تله", "لړم", "لیندې", "مرغومی", "سلواغه", "کب"],
         numbers: ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"],
-        connectors: ["ګرینویچ کې", "په"],
-        dariconnectors: ["سا", "عت"],
+        connectors: ["د ګرېنویچ وخت", "په"],
+        dariconnectors: ["ګرینویچ", ""],
         uzbekconnectors: ["گرینویچ وقتی", "ده"],
         heading: "د بي بي سي ورلډ سروس رادیو ویژن – افغانستان",
-        published: ["XX دقیقې وړاندې خپورشوی ", "XX دقیقې وړاندې خپورشوی", "XX ساعته وړاندې خپورشوی", "XX ساعته وړاندې خپورشوی", "XX ورځې وړاندې خپورشوی", "XX ورځې وړاندې خپورشوی"]
+        published: ["XX دقیقې وړاندې خپورشوی ", "XX دقیقې وړاندې خپورشوی", "XX ساعته وړاندې خپورشوی", "XX ساعته وړاندې خپورشوی", "XX ورځې وړاندې خپورشوی", "XX ورځې وړاندې خپورشوی"],
+        farsipublished: ["XX دقیقه پیش", "XX دقیقه پیش", "XX ساعت پیش", "XX ساعت پیش", "XX  روز پیش", "XX  روز پیش"]
     }
 };
    
