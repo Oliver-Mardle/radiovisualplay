@@ -20,6 +20,7 @@ var downloadSchedule = true;
 var downloadNews = true;
 let schedule = [];
 let allStories = [];
+let allStoriesTemp = [];
 var lang = "";
 var daysOfWeek = "";
 var months = "";
@@ -220,6 +221,9 @@ function ScheduleSection({ params }) {
             schedule.push(programme);
           }
           downloadSchedule = false;
+          } else {
+            console.log("Network Error - reusing old schedule!")
+            downloadSchedule = false;
           }
         }
         if (counter2 === scheduleItemCount) {
@@ -329,7 +333,6 @@ function NewsHeadlines({ params }) {
   let eventTime;
 
   const [on, setOn] = useState(false);
-  const [steady, setSteady] = useState(false);
   const containerRef = React.useRef(null);
   const styling = params.styling || 'grownup';
   const FALSE = true;
@@ -347,50 +350,58 @@ function NewsHeadlines({ params }) {
         console.log(on);
         
         if (downloadNews === true) {
+          allStoriesTemp = allStories;
           allStories = []
           const parser = new DOMParser();
-          for (let i = 0; i < feeds.length; i++) {
-            const r1 = await fetch("https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + feeds[i] + "&mixins=summary,thumbnail_images&sort=date_desc");
-            if (r1.ok) {
-              let newsItems = await r1.text();
-              newsItems = parser.parseFromString(newsItems, "text/xml");
-              let stories = newsItems.getElementsByTagName('item');
-              let headline = "";
-              let description = "";
-              let date = "";
-              let image = "";
-              let languageCode = "";
-              for (let i = 0; i < stories.length; i++) {
-                headline = (stories[i].childNodes[1].childNodes[0].nodeValue);
-                if (stories[i].childNodes[7].nodeName === 'description') {
-                  description = (stories[i].childNodes[7].childNodes[0].nodeValue);
-                  date = (stories[i].childNodes[9].childNodes[0].nodeValue);
-                } else {
-                  description = ("No Summary!");
-                  date = (stories[i].childNodes[7].childNodes[0].nodeValue);
-                }
 
-                date = (stories[i].getElementsByTagName('pubDate')[0].childNodes[0].nodeValue)
-                headline = (stories[i].getElementsByTagName('title')[0].childNodes[0].nodeValue);
-                try{
-                  description= (stories[i].getElementsByTagName('description')[0].childNodes[0].nodeValue);
-                } catch {
-                  description = false;
-                }  
-                try{
-                  image = (stories[i].getElementsByTagName('media:thumbnail')[0].attributes[0].nodeValue);
-                } catch {
-                  image = false;
-                }
-                try{
-                  languageCode = newsItems.getElementsByTagName('language')[0].childNodes[0].nodeValue;
-                } catch {
-                  languageCode = false;
-                }
+          try {
+            for (let i = 0; i < feeds.length; i++) {
+              const r1 = await fetch("https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + feeds[i] + "&mixins=summary,thumbnail_images&sort=date_desc");
+              if (r1.ok) {
+                let newsItems = await r1.text();
+                newsItems = parser.parseFromString(newsItems, "text/xml");
+                let stories = newsItems.getElementsByTagName('item');
+                let headline = "";
+                let description = "";
+                let date = "";
+                let image = "";
+                let languageCode = "";
+                for (let i = 0; i < stories.length; i++) {
+                  headline = (stories[i].childNodes[1].childNodes[0].nodeValue);
+                  if (stories[i].childNodes[7].nodeName === 'description') {
+                    description = (stories[i].childNodes[7].childNodes[0].nodeValue);
+                    date = (stories[i].childNodes[9].childNodes[0].nodeValue);
+                  } else {
+                    description = ("No Summary!");
+                    date = (stories[i].childNodes[7].childNodes[0].nodeValue);
+                  }
 
-                allStories.push({'headline': headline, 'description': description, 'date': date, 'image': image, 'languageCode': languageCode, 'index': i});
+                  date = (stories[i].getElementsByTagName('pubDate')[0].childNodes[0].nodeValue)
+                  headline = (stories[i].getElementsByTagName('title')[0].childNodes[0].nodeValue);
+                  try{
+                    description= (stories[i].getElementsByTagName('description')[0].childNodes[0].nodeValue);
+                  } catch {
+                    description = false;
+                  }  
+                  try{
+                    image = (stories[i].getElementsByTagName('media:thumbnail')[0].attributes[0].nodeValue);
+                  } catch {
+                    image = false;
+                  }
+                  try{
+                    languageCode = newsItems.getElementsByTagName('language')[0].childNodes[0].nodeValue;
+                  } catch {
+                    languageCode = false;
+                  }
+
+                  allStories.push({'headline': headline, 'description': description, 'date': date, 'image': image, 'languageCode': languageCode, 'index': i});
+                }
               }
             }
+          } catch {
+            console.log("Network Error - reusing old stories!")
+            downloadNews = false;
+            allStories = allStoriesTemp;
           }
           downloadNews = false;
           newsItemCount = allStories.length;
@@ -419,7 +430,6 @@ function NewsHeadlines({ params }) {
         in={on} mountOnEnter unmountOnExit
         container={containerRef.current}
         onEntered={() => console.log('entered')}
-        addEndListener={() => setSteady(FALSE)}
         timeout={500}>
         <Box sx={{
             height: '652px', width: '740px', color: 'white',
