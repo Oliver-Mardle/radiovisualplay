@@ -9,6 +9,7 @@ import schedule_default from './schedules_holding_image.jpg'
 import sample from  './ReithBackingLoop.webm';
 import defaultImg from './default.png';
 import TextTransition, { presets } from 'react-text-transition';
+import { ConstructionOutlined } from '@mui/icons-material';
 
 const config = require('./config');
 
@@ -218,7 +219,13 @@ function ScheduleSection({ params }) {
             }
 
             let programme = {'title': title, 'brand': brand, 'episode': episode, 'synopsis': synopsis, 'start': start, 'duration': duration, 'thumbnail': thumbnail, 'pid': pid};
-            schedule.push(programme);
+            let excludedProgrammes = config.excludedProgrammes['programmes'];
+            console.log(excludedProgrammes);
+            if (excludedProgrammes.includes(programme.title)) {
+              console.log("Ignore " + programme.title)
+            } else {
+              schedule.push(programme);
+            }
           }
           downloadSchedule = false;
           } else {
