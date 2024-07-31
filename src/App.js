@@ -227,7 +227,7 @@ function ScheduleSection({ params }) {
               schedule.push(programme);
             }
           }
-          scheduleItemCount = items.length;
+          scheduleItemCount = schedule.length;
           downloadSchedule = false;
           } else {
             console.log("Network Error - reusing old schedule!")
