@@ -273,6 +273,7 @@ function News({ headline, styling }) {
   let language;
   let newsIndex;
   let published;
+  let headlineSize = 48;
   published = config[lang]["published"];
 
   // try {
@@ -284,6 +285,12 @@ function News({ headline, styling }) {
 
   try{
     newsHeadline = headline.headline;
+    headlineSize = resizeFonts ({
+      lengthBeforeCut: 65,
+      maxSize: headlineSize,
+      length: newsHeadline.length,
+      cutPerCharacter: 1.5
+    }) + 'px';
     //seriesEpisode = headline.description;
     eventTime = calculateTimePassed(headline.date, published);
     if (headline.image === false) {
@@ -311,13 +318,11 @@ function News({ headline, styling }) {
       width: '740px', height: '652px'
     }}>
       <TextTransition springConfig={presets.stiff}>
-        <Box sx={{height: '652px', width: '740px',
-        backgroundImage: 'linear-gradient(to bottom, rgba(45, 45, 45, 0), rgba(45, 45, 45, 0), rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 1), rgba(0, 0, 0, 1)), url('+ picture +')',
-        backgroundSize: '741px', display: 'grid', gridTemplateRows: '275px 335px 42px', direction: 'rtl'
+        <Box sx={{height: '652px', width: '740px', display: 'grid', gridTemplateRows: '415px 195px 42px', direction: 'rtl', color: 'black', backgroundColor: '#EBEBEB'
         }}>
-          <Box></Box>
-          <Box sx={{height: 'fit-content', paddingLeft: '10px', paddingRight: '10px'}}>
-            <Typography dir='auto' fontFamily={'BBCReithQalam_W_Rg'} fontSize={'48px'}>{newsHeadline}</Typography>
+          <Box><img alt="" src={picture} width='741' borderRadius='10px'/></Box>
+          <Box sx={{height: 'fit-content', paddingLeft: '10px', paddingRight: '10px', backgroundColor: '#EBEBEB'}}>
+            <Typography dir='auto' fontFamily={'BBCReithQalam_W_Bd'} fontSize={headlineSize}>{newsHeadline}</Typography>
           </Box>
           <Box sx={{paddingLeft: '10px', paddingRight: '10px'}}>
             <Typography dir='auto' fontFamily={'BBCReithQalam_W_Rg'} fontSize={'28px'}>{eventTime}</Typography>
