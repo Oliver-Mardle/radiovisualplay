@@ -315,7 +315,7 @@ function News({ headline, styling }) {
 
   return (
     <Box sx={{
-      width: '740px', height: '652px'
+      width: '740px', height: '652px', backgroundColor: '#EBEBEB'
     }}>
       <TextTransition springConfig={presets.stiff}>
         <Box sx={{height: '652px', width: '740px', display: 'grid', gridTemplateRows: '415px 195px 42px', direction: 'rtl', color: 'black', backgroundColor: '#EBEBEB'
