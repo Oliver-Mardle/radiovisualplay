@@ -9,7 +9,6 @@ import schedule_default from './schedules_holding_image.jpg'
 import sample from  './ReithBackingLoop.webm';
 import defaultImg from './default.png';
 import TextTransition, { presets } from 'react-text-transition';
-import { ConstructionOutlined } from '@mui/icons-material';
 
 const config = require('./config');
 
@@ -289,7 +288,7 @@ function News({ headline, styling }) {
       lengthBeforeCut: 65,
       maxSize: headlineSize,
       length: newsHeadline.length,
-      cutPerCharacter: 1.5
+      cutPerCharacter: 2.4
     }) + 'px';
     //seriesEpisode = headline.description;
     eventTime = calculateTimePassed(headline.date, published);
@@ -318,14 +317,16 @@ function News({ headline, styling }) {
       width: '740px', height: '652px', backgroundColor: '#EBEBEB'
     }}>
       <TextTransition springConfig={presets.stiff}>
-        <Box sx={{height: '652px', width: '740px', display: 'grid', gridTemplateRows: '415px 195px 42px', direction: 'rtl', color: 'black', backgroundColor: '#EBEBEB'
+        <Box sx={{height: '652px', width: '740px', display: 'grid', gridTemplateRows: '415px 237px', direction: 'rtl', color: 'black', backgroundColor: '#EBEBEB'
         }}>
           <Box><img alt="" src={picture} width='741' borderRadius='10px'/></Box>
-          <Box sx={{height: 'fit-content', paddingLeft: '10px', paddingRight: '10px', backgroundColor: '#EBEBEB'}}>
-            <Typography dir='auto' fontFamily={'BBCReithQalam_W_Bd'} fontSize={headlineSize}>{newsHeadline}</Typography>
-          </Box>
-          <Box sx={{paddingLeft: '10px', paddingRight: '10px'}}>
-            <Typography dir='auto' fontFamily={'BBCReithQalam_W_Rg'} fontSize={'28px'}>{eventTime}</Typography>
+          <Box sx={{height: '652px', width: '740px', display: 'grid', gridTemplateRows: '195px 42px', direction: 'rtl', color: 'black', backgroundColor: '#EBEBEB'}}>
+            <Box sx={{height: 'fit-content', paddingLeft: '10px', paddingRight: '10px'}}>
+              <Typography dir='auto' fontFamily={'BBCReithQalam_W_Bd'} fontSize={headlineSize}>{newsHeadline}</Typography>
+            </Box>
+            <Box sx={{paddingLeft: '10px', paddingRight: '10px'}}>
+              <Typography dir='auto' fontFamily={'BBCReithQalam_W_Rg'} fontSize={'28px'}>{eventTime}</Typography>
+            </Box>
           </Box>
         </Box>
       </TextTransition>
