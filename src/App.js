@@ -207,7 +207,11 @@ function ScheduleSection({ params }) {
             const r3 = await fetch("https://ws-syndication.api.bbci.co.uk/api/episodes?pid=" + pid + "&page_size=100&api-key=" + config.app.schedulesKey);
             if (r3.ok) {
             const data3 = await r3.json();
-            language = data3["ws_syndication"]["results"]["items"][0]["language"];
+            try{
+              language = data3["ws_syndication"]["results"]["items"][0]["language"];
+            } catch {
+              language = config["app"]["language"];
+            }
             brand = config["languageCodes"][language];
             }
 
