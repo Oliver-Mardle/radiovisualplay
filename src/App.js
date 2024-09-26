@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import BBCNews from './BBC_News_Afghanistan.png'
 import BBCNews2 from './BBC_News_EN.png'
 import schedule_default from './schedules_holding_image.jpg'
-import sample from  './ReithBackingLoop.webm';
+import sample from  './BBCReithLoop.webm';
 import defaultImg from './default.png';
 import TextTransition, { presets } from 'react-text-transition';
 
