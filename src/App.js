@@ -213,6 +213,9 @@ function ScheduleSection({ params }) {
               language = config["app"]["language"];
             }
             brand = config["languageCodes"][language];
+            } else {
+              language = config["app"]["language"];
+              console.log("API Fault, unable to get language code - defaulting to " + language)
             }
 
             try {
