@@ -144,7 +144,7 @@ function BuildScheduleBox({ scheduleData }) {
       synopsis = scheduleData.subtitle;
       start = scheduleData.link;
       let link = scheduleData.qrcode;
-      console.log(link);
+      //console.log(link);
       image = qrcodes[link];
     }
   } catch {
@@ -242,12 +242,12 @@ function ScheduleSection({ params }) {
               if (excludedProgrammes.includes(programme.title)) {
                 console.log("Ignore " + programme.title)
               } else {
-                console.log(programme);
-                //schedule.push(programme);
+                //console.log(programme);
+                schedule.push(programme);
               }
             }
             for (let i = 0; i < config.infoSlides.slides.length; i++) {
-              console.log(config.infoSlides.slides[i])
+              //console.log(config.infoSlides.slides[i])
               schedule.push(config.infoSlides.slides[i])
             }
             scheduleItemCount = schedule.length;
