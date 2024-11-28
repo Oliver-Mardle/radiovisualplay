@@ -209,7 +209,7 @@ function ScheduleSection({ params }) {
               let title = items[i]["brand"]["title"];
               let brand = items[i]["brand"]["master_brand"].replace("bbc_", "").replace("_tv", "");
               let episode = items[i]["episode"]["title"];
-              let synopsis = items[i]["episode"]["synopsis"];
+              let synopsis = items[i]["brand"]["synopsis"];
               let start = items[i]["broadcast"]["published_time"]["attr"]["start"];
               let duration = items[i]["version"]["duration"];
               let thumbnail = items[i]["broadcast"]["image"]["attr"]["template_url"];
