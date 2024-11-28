@@ -328,14 +328,14 @@ function News({ headline, styling }) {
 
   return (
     <Box sx={{
-      width: '665px', height: '585px', borderRadius: '10px', backgroundColor: '#EBEBEB', overflow: 'hidden'
+      width: '665px', height: '585px', borderRadius: '10px', backgroundColor: '#D8D8D8', overflow: 'hidden'
     }}>
       <TextTransition springConfig={presets.stiff}>
         <Box sx={{
-          height: '585px', width: '665px', display: 'grid', gridTemplateRows: '375px 210px', direction: 'rtl', color: 'black', backgroundColor: '#EBEBEB'
+          height: '585px', width: '665px', display: 'grid', gridTemplateRows: '375px 210px', direction: 'rtl', color: 'black', backgroundColor: '#D8D8D8', overflow: 'hidden'
         }}>
           <Box><img alt="" src={picture} width='665px' borderRadius='10px' /></Box>
-          <Box sx={{ height: '585px', width: '665px', display: 'grid', gridTemplateRows: '168px 42px', direction: 'rtl', color: 'black', backgroundColor: '#EBEBEB' }}>
+          <Box sx={{ height: '585px', width: '665px', display: 'grid', gridTemplateRows: '168px 42px', direction: 'rtl', color: 'black', backgroundColor: '#D8D8D8' }}>
             <Box sx={{ height: 'fit-content', paddingLeft: '10px', paddingRight: '10px' }}>
               <Typography dir='auto' fontFamily={'BBCReithQalam_W_Bd'} fontSize={headlineSize}>{newsHeadline}</Typography>
             </Box>
@@ -493,12 +493,16 @@ function TopRight({ params }) {
   console.log(params.language);
   
   return (
-    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-      <video className='videoTag' autoPlay loop width='440' muted>
-        <source src={audioloop} type='video/webm' />
-      </video>
-      <Typography dir='rtl' fontFamily={'BBCReithQalam_W_Bd'} fontSize={'75px'}>رادیو</Typography>
-      <img alt='Speaker' height='56px' src={speakerImg} />
+    <Box sx={{ display: 'grid', gridTemplateColumns: '440px 195px 70px'}}>
+      <Box sx={{marginTop: '-18px'}}>
+        <video className='videoTag' autoPlay loop width='440' height='247.5' muted><source src={audioloop} type='video/webm' /></video>
+      </Box>
+      <Box sx={{marginTop: '36px', marginRight: '35px'}}>
+        <Typography dir='rtl' fontFamily={'BBCReithQalam_W_Bd'} fontSize={'75px'}>رادیو</Typography>
+      </Box>
+      <Box sx={{marginTop: '78px'}}>
+        <img alt='Speaker' height='56px' src={speakerImg} />
+      </Box>
     </Box>
   );
 }
@@ -529,7 +533,7 @@ export default function App(params) {
             <source src={sample} type='video/webm' />
           </video>
         </Box>
-        <Box sx={{ display: 'grid', width: '1559px', height: '150px', gridTemplateColumns: '1fr 1fr', marginTop: '0px', marginLeft: '110px', marginRight: '251px' }}>
+        <Box sx={{ display: 'grid', width: '1559px', height: '150px', gridTemplateColumns: '854px 1fr', marginTop: '0px', marginLeft: '110px', marginRight: '251px' }}>
           <Box sx={{ display: 'block', marginTop: '78px'}}><TopLeft region={params.region} /></Box>
           <Box sx={{ display: 'block'}}><TopRight params={params} /></Box>
         </Box>
