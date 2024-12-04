@@ -306,7 +306,8 @@ function News({ headline, styling }) {
     console.log(newsIndex);
 
   } catch {
-    console.log("No Data Yet")
+    console.log(headline);
+    console.log("No Data Yet");
   }
 
   try {
