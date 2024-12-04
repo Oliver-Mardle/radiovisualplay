@@ -7,7 +7,9 @@ import BBCNews from './BBC_News_Afghanistan.png'
 import BBCNews2 from './BBC_News_EN.png'
 import schedule_default from './schedules_holding_image.jpg'
 import sample from  './BBCReithLoop.webm';
+import audioloop from './AudioWave.webm';
 import defaultImg from './default.png';
+import speakerImg from './speaker.png';
 import TextTransition, { presets } from 'react-text-transition';
 
 const config = require('./config');
@@ -197,7 +199,7 @@ function ScheduleSection({ params }) {
             let title = items[i]["brand"]["title"];
             let brand = items[i]["brand"]["master_brand"].replace("bbc_", "").replace("_tv", "");
             let episode = items[i]["episode"]["title"];
-            let synopsis = items[i]["episode"]["synopsis"];
+            let synopsis = items[i]["brand"]["synopsis"];
             let start = items[i]["broadcast"]["published_time"]["attr"]["start"];
             let duration = items[i]["version"]["duration"];
             let thumbnail = items[i]["broadcast"]["image"]["attr"]["template_url"];
@@ -472,55 +474,31 @@ function TopRight({ params }) {
   months = config[lang].month;
   numbers = config[lang].numbers;
   connectors = config[lang].connectors;
-  let showFullTime = params.fullTime || false;
   console.log(params.language);
-  const [on, setOn] = useState(false);
-  const [TimeDateString, setTimeDate] = useState();
-  let eventTime;
-  const FALSE = true;
-  useEffect(() => {
-    let interval = null;
-    interval = setInterval(() => {
-      (async () => {
-        const sOfm = (eventTime) ;
-        if ((sOfm) > 1) {
-          setOn(true);
-        } else {
-          setOn(FALSE);
-        }
-        console.log(on);
-        let TimeDate = new Date();
-        let Hours = Translate((("0" + TimeDate.getHours()).slice(-2)), numbers);
-        let Minutes = Translate((("0" + TimeDate.getMinutes()).slice(-2)), numbers);
-        let TodayDate = Translate(TimeDate.getDate(), numbers)
-        let Year = Translate(TimeDate.getFullYear(), numbers)
-        if (showFullTime === true) {
-          let TimeDateStr = Hours + ":" + Minutes + " - " + daysOfWeek[TimeDate.getDay()] + " " + TodayDate + " " + months[TimeDate.getMonth()] + " " + Year;
-          setTimeDate(TimeDateStr); 
-        } else {
-          let TimeDateStr = Hours + ":" + Minutes + " - " + daysOfWeek[TimeDate.getDay()];
-          setTimeDate(TimeDateStr); 
-        }
-      })();
-      }, 500);
-    return () => clearInterval(interval);
-  });
+  
   return (
-    <Box>
-      <Typography dir='rtl' fontFamily={'BBCReithQalam_W_Bd'} fontSize={'26px'}>{TimeDateString}</Typography>
-      <Typography dir='rtl' fontFamily={'BBCReithQalam_W_Bd'} fontSize={'26px'}>{config[lang].heading}</Typography>
+    <Box sx={{ display: 'grid', gridTemplateColumns: '440px 195px 70px'}}>
+      <Box sx={{marginTop: '-18px'}}>
+        <video className='videoTag' autoPlay loop width='440' height='247.5' muted><source src={audioloop} type='video/webm' /></video>
+      </Box>
+      <Box sx={{marginTop: '36px', marginRight: '35px'}}>
+        <Typography dir='rtl' fontFamily={'BBCReithQalam_W_Bd'} fontSize={'75px'}>رادیو</Typography>
+      </Box>
+      <Box sx={{marginTop: '78px'}}>
+        <img alt='Speaker' height='56px' src={speakerImg} />
+      </Box>
     </Box>
   );
 }
 
-function TopLeft({region}) {
+function TopLeft({ region }) {
   let icon = '';
-  if (region === 'en'){
+  if (region === 'en') {
     icon = BBCNews2;
   } else {
     icon = BBCNews;
   }
-  return <img alt='BBC News' height='68px' src={icon}/>;
+  return <img alt='BBC News' height='68px' src={icon} />;
 }
 
 /*
@@ -531,7 +509,7 @@ export default function App(params) {
     <Paper>
       <Box sx={{
         width: 'auto', height: '100vh',
-        display: 'grid', gridTemplateRows: '110px 134px 659px'
+        display: 'grid', gridTemplateRows: '10px 185px 1fr'
       }}>
         <Box>
           <video className='videoTag' autoPlay loop width='1920'
@@ -539,13 +517,11 @@ export default function App(params) {
             <source src={sample} type='video/webm'/>
           </video>
         </Box>
-        <Box sx={{ display: 'grid', width: '1700px', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr',  marginTop: '0px', marginLeft: '110px', marginRight: '110px'}}>
-          <Box sx={{ display: 'block', marginTop: '13px' }}><TopLeft region={params.region}/></Box>
-          <Box sx={{ display: 'block', marginTop: '14px' }}><TopRight params={params} /></Box>
-          <Box></Box>
-          <Box></Box>
+        <Box sx={{ display: 'grid', width: '1559px', height: '150px', gridTemplateColumns: '995px 1fr', marginTop: '0px', marginLeft: '110px', marginRight: '110px'}}>
+          <Box sx={{ display: 'block', marginTop: '78px' }}><TopLeft region={params.region}/></Box>
+          <Box sx={{ display: 'block'}}><TopRight params={params} /></Box>
         </Box>
-        <Box sx={{ display: 'grid', width: '1700px', gridTemplateColumns: '1fr 1fr',  marginTop: '0px', marginLeft: '110px', marginRight: '110px'}}>
+        <Box sx={{ display: 'grid', width: '1700px', height: '652px', gridTemplateColumns: '1fr 1fr',  marginTop: '90px', marginLeft: '110px', marginRight: '110px'}}>
           <ScheduleSection params={params} />
           <NewsHeadlines params={params} />
         </Box>

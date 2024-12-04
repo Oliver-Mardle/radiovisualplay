@@ -27,7 +27,6 @@ let feedAStories = [];
 let feedBStories = [];
 var lang = "";
 var daysOfWeek = "";
-var months = "";
 var numbers = "";
 var connectors = "";
 let qrcodes = {'DariQR': DariQR, 'PashtoQR': PashtoQR};
@@ -104,7 +103,7 @@ function BuildScheduleBox({ scheduleData }) {
   let titleColour = "red";
 
   try {
-    if (scheduleData.type == 0) {
+    if (scheduleData.type === 0) {
       title = scheduleData.title;
       brand = scheduleData.brand;
       synopsis = scheduleData.synopsis;
@@ -175,8 +174,6 @@ function ScheduleSection({ params }) {
   const sid = params.sid || config.app.sid;
   const [on, setOn] = useState(false);
   const [now, setNow] = useState();
-  const [next, setNext] = useState();
-  const [later, setLater] = useState();
   let eventTime;
   const FALSE = true;
 
@@ -264,12 +261,6 @@ function ScheduleSection({ params }) {
         }
         try {
           setNow(schedule[counter2]);
-          setNext(schedule[counter2 + 1]);
-          if (counter2 + 1 <= scheduleItemCount) {
-            setLater(schedule[counter2 + 2]);
-          } else {
-            setLater([]);
-          }
           counter2 = counter2 + 1;
         } catch (error) {
           console.log(error);
@@ -487,7 +478,6 @@ function NewsHeadlines({ params }) {
 function TopRight({ params }) {
   lang = params.language || "pashto";
   daysOfWeek = config[lang].day;
-  months = config[lang].month;
   numbers = config[lang].numbers;
   connectors = config[lang].connectors;
   console.log(params.language);
@@ -517,8 +507,55 @@ function TopLeft({ region }) {
   return <img alt='BBC News' height='68px' src={icon} />;
 }
 
-/*
-*/
+function UpperLayoutSwitch({ params }) {
+  let mode = params.mode || '0';
+  if (mode === '0') {
+    return (
+      <Box sx={{ display: 'grid', width: '1559px', height: '150px', gridTemplateColumns: '854px 1fr', marginTop: '0px', marginLeft: '110px', marginRight: '251px' }}>
+        <Box sx={{ display: 'block', marginTop: '78px'}}><TopLeft region={params.region} /></Box>
+        <Box sx={{ display: 'block'}}><TopRight params={params} /></Box>
+      </Box>
+    )
+  } else {
+    return (
+      <Box sx={{ display: 'grid', width: '1559px', height: '150px', gridTemplateColumns: '854px 1fr', marginTop: '0px', marginLeft: '110px', marginRight: '251px' }}>
+        <Box sx={{ display: 'block', marginTop: '139px'}}><TopLeft region={params.region} /></Box>
+        <Box></Box>
+      </Box>
+    )
+  }
+}
+
+function LowerLayoutSwitch({ params }) {
+  let mode = params.mode || '0';
+  if (mode === '0') {
+    return (
+      <Box sx={{ display: 'grid', width: '1418px', gridTemplateRows: '585px 44px 184px', marginTop: '0px', marginLeft: '251px', marginRight: '251px' }}>
+          <NewsHeadlines params={params} />
+          <Box></Box>
+          <ScheduleSection params={params} />
+      </Box>
+    )
+  } else {
+    return (
+      <Box sx={{ display: 'grid', width: '1700px', height: '652px', gridTemplateColumns: '1fr 740px',  marginTop: '110px', marginLeft: '110px', marginRight: '110px', borderRadius: '10px', overflow: 'hidden'}}>
+        <Box sx={{display: 'grid', gridTemplateRows: '300px 104px 248px', background: '#EBEBEB', alignItems: 'center', justifyContent: 'center'}}>
+          <Box sx={{marginLeft: '168.5px'}}><img alt="" src={DariQR} height='250'/></Box>
+          <Box><Typography dir='rtl' color={'red'} fontFamily={'BBCReithQalam_W_Rg'} fontSize={'75px'}>په هوا کې ژوند کول</Typography></Box>
+          <Box sx={{display: 'grid', gridTemplateColumns: '440px 70px', alignItems: 'center', justifyContent: 'center'}}>
+            <Box>
+              <video className='videoTag' autoPlay loop width='440' height='247.5' muted><source src={audioloop} type='video/webm' /></video>
+            </Box>
+            <Box>
+              <img alt='Speaker' height='56px' src={speakerImg} />
+            </Box>
+          </Box>
+        </Box>
+        <Box sx={{background: 'black'}}></Box>
+      </Box>
+    )
+  }
+}
 
 export default function App(params) {
   return (
@@ -533,15 +570,8 @@ export default function App(params) {
             <source src={sample} type='video/webm' />
           </video>
         </Box>
-        <Box sx={{ display: 'grid', width: '1559px', height: '150px', gridTemplateColumns: '854px 1fr', marginTop: '0px', marginLeft: '110px', marginRight: '251px' }}>
-          <Box sx={{ display: 'block', marginTop: '78px'}}><TopLeft region={params.region} /></Box>
-          <Box sx={{ display: 'block'}}><TopRight params={params} /></Box>
-        </Box>
-        <Box sx={{ display: 'grid', width: '1418px', gridTemplateRows: '585px 44px 184px', marginTop: '0px', marginLeft: '251px', marginRight: '251px' }}>
-          <NewsHeadlines params={params} />
-          <Box></Box>
-          <ScheduleSection params={params} />
-        </Box>
+        <UpperLayoutSwitch params={params}/>
+        <LowerLayoutSwitch params={params}/>
       </Box>
     </Paper>
   );
