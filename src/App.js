@@ -10,6 +10,7 @@ import sample from './BBCReithLoop.webm';
 import audioloop from './AudioWave.webm';
 import defaultImg from './default.png';
 import speakerImg from './speaker.png';
+import speakerBKImg from './speaker-bk.png';
 import DariQR from './DariQR.png';
 import PashtoQR from './PashtoQR.png';
 import TextTransition, { presets } from 'react-text-transition';
@@ -521,7 +522,7 @@ function UpperLayoutSwitch({ params }) {
   } else {
     return (
       <Box sx={{ display: 'grid', width: '1559px', height: '150px', gridTemplateColumns: '854px 1fr', marginTop: '0px', marginLeft: '110px', marginRight: '251px' }}>
-        <Box sx={{ display: 'block', marginTop: '139px'}}><TopLeft region={params.region} /></Box>
+        <Box sx={{ display: 'block', marginTop: '123px'}}><TopLeft region={params.region} /></Box>
         <Box></Box>
       </Box>
     )
@@ -530,6 +531,9 @@ function UpperLayoutSwitch({ params }) {
 
 function LowerLayoutSwitch({ params }) {
   let mode = params.mode || '0';
+  let preset = params.preset || '0';
+  let link = config.infoSlides.slides[preset].link
+  let qrcode = qrcodes[config.infoSlides.slides[preset].qrcode]
   if (mode === '0') {
     return (
       <Box sx={{ display: 'grid', width: '1418px', gridTemplateRows: '585px 44px 184px', marginTop: '0px', marginLeft: '251px', marginRight: '251px' }}>
@@ -540,20 +544,20 @@ function LowerLayoutSwitch({ params }) {
     )
   } else {
     return (
-      <Box sx={{ display: 'grid', width: '1700px', height: '652px', gridTemplateColumns: '1fr 740px',  marginTop: '110px', marginLeft: '110px', marginRight: '110px', borderRadius: '10px', overflow: 'hidden'}}>
-        <Box sx={{display: 'grid', gridTemplateRows: '300px 104px 248px', background: '#EBEBEB', alignItems: 'center', justifyContent: 'center'}}>
-          <Box sx={{marginLeft: '168.5px'}}><img alt="" src={DariQR} height='250'/></Box>
-          <Box><Typography dir='rtl' color={'red'} fontFamily={'BBCReithQalam_W_Rg'} fontSize={'75px'}>په هوا کې ژوند کول</Typography></Box>
-          <Box sx={{display: 'grid', gridTemplateColumns: '440px 70px', alignItems: 'center', justifyContent: 'center'}}>
-            <Box>
-              <video className='videoTag' autoPlay loop width='440' height='247.5' muted><source src={audioloop} type='video/webm' /></video>
+      <Box sx={{ display: 'grid', width: '1700px', height: '659px', gridTemplateColumns: '1fr 740px', marginTop: '43px', marginLeft: '110px', marginRight: '110px', borderRadius: '10px', overflow: 'hidden'}}>
+        <Box sx={{display: 'grid', gridTemplateRows: '304px 73.5px 244px', background: '#EBEBEB'}}>
+          <Box sx={{marginLeft: '370px', marginTop: '84px'}}><img alt="" src={qrcode} height='220'/></Box>
+          <Box sx={{width: '960px', marginTop: '30px'}}><Typography dir='auto' color={'black'} textAlign={'center'} fontFamily={'BBCReithQalam_W_Rg'} fontSize={'29px'}>{link}</Typography></Box>
+          <Box sx={{display: 'grid', gridTemplateColumns: '780px 180px'}}>
+            <Box sx={{marginLeft: '52px', marginTop: '-88.5px'}}>
+              <video className='videoTag' autoPlay loop width='728' height='410' muted><source src={audioloop} type='video/webm' /></video>
             </Box>
-            <Box>
-              <img alt='Speaker' height='56px' src={speakerImg} />
+            <Box sx={{marginLeft: '-25px', marginTop: '77.5px'}}>
+              <img alt='Speaker' height='78px' src={speakerBKImg} />
             </Box>
           </Box>
         </Box>
-        <Box sx={{background: 'black'}}></Box>
+        <Box sx={{background: 'black', borderRadius: '10px'}}></Box>
       </Box>
     )
   }
