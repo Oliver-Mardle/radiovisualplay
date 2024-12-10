@@ -271,7 +271,7 @@ function ScheduleSection({ params }) {
     return () => clearInterval(interval);
   });
   return (
-    <Box sx={{ display: 'grid', fontFamily: 'BBCReithSans_W_Md', width: '910pxpx', gridTemplateRows: '1fr', marginTop: '0px', marginRight: '50px' }}>
+    <Box sx={{ display: 'grid', fontFamily: 'BBCReithQalam_W_Rg', width: '910pxpx', gridTemplateRows: '1fr', marginTop: '0px', marginRight: '50px' }}>
       <BuildScheduleBox scheduleData={now} />
     </Box>
   );
@@ -387,6 +387,7 @@ function unpackISAPIResponse(newsItems) {
 function NewsHeadlines({ params }) {
   let feeds = [];
   const feed = params.feed || [config.app.feedA, config.app.feedB];
+  console.log(feed)
 
   try {
     feeds = feed.split(",");
@@ -416,12 +417,12 @@ function NewsHeadlines({ params }) {
 
         if (downloadNews === true) {
           try {
-            const r1 = await fetch("https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + config.app.feedA + "&mixins=summary,thumbnail_images&sort=date_desc");
+            const r1 = await fetch("https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + feeds[0] + "&mixins=summary,thumbnail_images&sort=date_desc&number_of_items=5");
             if (r1.ok) {
               let newsItems = await r1.text();
               feedAStories = unpackISAPIResponse(newsItems)
             }
-            const r2 = await fetch("https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + config.app.feedB + "&mixins=summary,thumbnail_images&sort=date_desc");
+            const r2 = await fetch("https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + feeds[1] + "&mixins=summary,thumbnail_images&sort=date_desc&number_of_items=5");
             if (r2.ok) {
               let newsItems = await r2.text();
               feedBStories = unpackISAPIResponse(newsItems)
@@ -448,7 +449,7 @@ function NewsHeadlines({ params }) {
           console.log("No News Has Been Downloaded Yet");
         }
       })();
-    }, 15000);
+    }, 20000);
     return () => clearInterval(interval);
   });
 
