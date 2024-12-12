@@ -386,15 +386,9 @@ function unpackISAPIResponse(newsItems) {
 }
 
 function NewsHeadlines({ params }) {
-  let feeds = [];
-  const feed = params.feed || [config.app.feedA, config.app.feedB];
-  console.log(feed)
+  let feedA = params.feedA || config.app.feedA
+  let feedB = params.feedB || config.app.feedB
 
-  try {
-    feeds = feed.split(",");
-  } catch {
-    feeds.push(feed);
-  }
   const [headlineA, setHeadlineA] = useState();
   const [headlineB, setHeadlineB] = useState();
   let eventTime;
@@ -418,12 +412,12 @@ function NewsHeadlines({ params }) {
 
         if (downloadNews === true) {
           try {
-            const r1 = await fetch("https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + feeds[0] + "&mixins=summary,thumbnail_images&sort=date_desc&number_of_items=5");
+            const r1 = await fetch("https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + feedA + "&mixins=summary,thumbnail_images&sort=date_desc&number_of_items=5");
             if (r1.ok) {
               let newsItems = await r1.text();
               feedAStories = unpackISAPIResponse(newsItems)
             }
-            const r2 = await fetch("https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + feeds[1] + "&mixins=summary,thumbnail_images&sort=date_desc&number_of_items=5");
+            const r2 = await fetch("https://information-syndication.api.bbc.com/articles?api_key=" + config.app.headlinesKey + "&feed=" + feedB + "&mixins=summary,thumbnail_images&sort=date_desc&number_of_items=5");
             if (r2.ok) {
               let newsItems = await r2.text();
               feedBStories = unpackISAPIResponse(newsItems)
@@ -478,20 +472,14 @@ function NewsHeadlines({ params }) {
   );
 }
 
-function TopRight({ params }) {
-  lang = params.language || "pashto";
-  daysOfWeek = config[lang].day;
-  numbers = config[lang].numbers;
-  connectors = config[lang].connectors;
-  console.log(params.language);
-  
+function TopRight({ params }) { 
   return (
     <Box sx={{ display: 'grid', gridTemplateColumns: '440px 195px 70px'}}>
       <Box sx={{marginTop: '-18px'}}>
         <video className='videoTag' autoPlay loop width='440' height='247.5' muted><source src={audioloop} type='video/webm' /></video>
       </Box>
-      <Box sx={{marginTop: '36px', marginRight: '35px'}}>
-        <Typography dir='rtl' fontFamily={'BBCReithQalam_W_Bd'} fontSize={'75px'}>رادیو</Typography>
+      <Box sx={{marginTop: '60px', marginRight: '60px'}}>
+        <Typography dir='rtl' fontFamily={'BBCReithQalam_W_Bd'} fontSize={'50px'}>{config.app.radioText}</Typography>
       </Box>
       <Box sx={{marginTop: '78px'}}>
         <img alt='Speaker' height='56px' src={speakerImg} />
@@ -507,14 +495,20 @@ function TopLeft({ region }) {
   } else {
     icon = BBCNews;
   }
-  return <img alt='BBC News' height='68px' src={icon} />;
+  return <img alt='BBC News' height='62px' src={icon} />;
 }
 
 function UpperLayoutSwitch({ params }) {
+  lang = params.language || config.app.language;
+  daysOfWeek = config[lang].day;
+  numbers = config[lang].numbers;
+  connectors = config[lang].connectors;
+  console.log(params.language);
+
   let mode = params.mode || '0';
   if (mode === '0') {
     return (
-      <Box sx={{ display: 'grid', width: '1559px', height: '150px', gridTemplateColumns: '854px 1fr', marginTop: '0px', marginLeft: '110px', marginRight: '251px' }}>
+      <Box sx={{ display: 'grid', width: '1418px', height: '150px', gridTemplateColumns: '713px 1fr', marginTop: '0px', marginLeft: '251px', marginRight: '251px' }}>
         <Box sx={{ display: 'block', marginTop: '78px'}}><TopLeft region={params.region} /></Box>
         <Box sx={{ display: 'block'}}><TopRight params={params} /></Box>
       </Box>
@@ -544,7 +538,7 @@ function LowerLayoutSwitch({ params }) {
     )
   } else {
     return (
-      <Box sx={{ display: 'grid', width: '1700px', height: '659px', gridTemplateColumns: '1fr 740px', marginTop: '43px', marginLeft: '110px', marginRight: '110px', borderRadius: '10px', overflow: 'hidden'}}>
+      <Box sx={{ display: 'grid', width: '1700px', height: '659px', gridTemplateColumns: '1fr 740px', marginTop: '43px', marginLeft: '110px', marginRight: '110px', borderRadius: '10px', overflow: 'hidden', background: '#EBEBEB'}}>
         <Box sx={{display: 'grid', gridTemplateRows: '304px 73.5px 244px', background: '#EBEBEB'}}>
           <Box sx={{marginLeft: '370px', marginTop: '84px'}}><img alt="" src={qrcode} height='220'/></Box>
           <Box sx={{width: '960px', marginTop: '30px'}}><Typography dir='auto' color={'black'} textAlign={'center'} fontFamily={'BBCReithQalam_W_Rg'} fontSize={'29px'}>{link}</Typography></Box>
